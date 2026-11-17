@@ -1,0 +1,22 @@
+From: Some Shop <news@shop.example>
+To: me@example.com
+Subject: Sale!
+Date: Mon, 16 Nov 2026 08:00:00 +0800
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============0559533621084903271=="
+
+--===============0559533621084903271==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+This email needs HTML.
+
+--===============0559533621084903271==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+<a href='https://shop.example/jobs/view/1'>Not a job</a>
+
+--===============0559533621084903271==--

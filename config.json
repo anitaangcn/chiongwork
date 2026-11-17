@@ -1,0 +1,12 @@
+{
+  "mcf_keywords": [
+    "data analyst",
+    "software engineer",
+    "marketing",
+    "accountant",
+    "designer"
+  ],
+  "mcf_pages_per_keyword": 3,
+  "mcf_newest_pages": 10,
+  "request_delay_seconds": 0.3
+}

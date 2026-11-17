@@ -1,0 +1,1923 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChiongWork</title>
+<script>try { var t = localStorage.getItem("cw.theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23d93a32'/%3E%3Cpath d='M9 9.5l6.5 6.5L9 22.5M16.5 9.5l6.5 6.5-6.5 6.5' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #f2f3f5; --panel: #ffffff; --panel-2: #f8f9fa; --sunk: #e9ebee; --ink: #16181b; --ink-2: #4a4f57; --ink-3: #6f757e;
+  --line: #e1e4e8; --line-2: #cfd3d9; --accent: #d93a32; --accent-ink: #ffffff; --accent-soft: #fdeceb; --accent-2: #b52a23;
+  --series: #3a6fd8; --series-soft: #dfe8fb; --series-ink: #1f4fae;
+  --early: #13703a; --early-bg: #e1f4e7; --good: #0b6e65; --good-bg: #dff3f0; --warn: #8f5500; --warn-bg: #fdf0d9;
+  --bad: #b42318; --bad-bg: #fde8e6; --status: #6c3bbf; --status-bg: #efe8fb;
+  --shadow-1: 0 1px 2px rgba(20,24,30,.05); --shadow-2: 0 2px 6px rgba(20,24,30,.06), 0 10px 30px rgba(20,24,30,.07);
+  color-scheme: light;
+  --r: 12px; --font: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121315; --panel: #1b1d20; --panel-2: #212327; --sunk: #17181b; --ink: #eef0f3; --ink-2: #b5bac2; --ink-3: #8a9099;
+    --line: #2a2d32; --line-2: #393d43; --accent: #ef5a4f; --accent-ink: #1a0b09; --accent-soft: #3a1c19; --accent-2: #ff7b70;
+    --series: #7da2f0; --series-soft: #22304b; --series-ink: #a9c1f6;
+    --early: #6fd394; --early-bg: #16301f; --good: #5fd0c3; --good-bg: #133230; --warn: #f0b45a; --warn-bg: #36290f;
+    --bad: #ff8a7d; --bad-bg: #3b1b17; --status: #b99cf2; --status-bg: #2b2240;
+    --shadow-1: 0 1px 2px rgba(0,0,0,.3); --shadow-2: 0 2px 8px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+    --bg: #121315; --panel: #1b1d20; --panel-2: #212327; --sunk: #17181b; --ink: #eef0f3; --ink-2: #b5bac2; --ink-3: #8a9099;
+    --line: #2a2d32; --line-2: #393d43; --accent: #ef5a4f; --accent-ink: #1a0b09; --accent-soft: #3a1c19; --accent-2: #ff7b70;
+    --series: #7da2f0; --series-soft: #22304b; --series-ink: #a9c1f6;
+    --early: #6fd394; --early-bg: #16301f; --good: #5fd0c3; --good-bg: #133230; --warn: #f0b45a; --warn-bg: #36290f;
+    --bad: #ff8a7d; --bad-bg: #3b1b17; --status: #b99cf2; --status-bg: #2b2240;
+    --shadow-1: 0 1px 2px rgba(0,0,0,.3); --shadow-2: 0 2px 8px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.3);
+    color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--ink); font: 14px/1.5 var(--font); -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+[hidden] { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+svg.i { width: 18px; height: 18px; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+svg.i.sm { width: 15px; height: 15px; }
+svg.i.lg { width: 22px; height: 22px; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--ink-3); }
+
+/* ---------- shell */
+.app { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 100vh; }
+.nav { position: sticky; top: 0; height: 100vh; background: var(--panel); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 18px 12px; gap: 2px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 2px 10px 18px; font-weight: 750; font-size: 17px; letter-spacing: -.02em; }
+.brand .logo { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); display: grid; place-items: center; color: #fff; }
+.brand small { display: block; font-size: 11.5px; font-weight: 500; color: var(--ink-3); letter-spacing: 0; margin-top: -2px; }
+.nav a { display: flex; align-items: center; gap: 11px; padding: 9px 10px; border-radius: 9px; text-decoration: none; color: var(--ink-2); font-weight: 550; }
+.nav a:hover { background: var(--sunk); color: var(--ink); }
+.nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent-2); }
+.nav a .badge { margin-left: auto; font-size: 11.5px; background: var(--sunk); color: var(--ink-2); border-radius: 999px; padding: 0 7px; font-weight: 600; }
+.nav a[aria-current="page"] .badge { background: var(--panel); }
+.nav .spacer { flex: 1; }
+.srcbox { border: 1px solid var(--line); border-radius: 11px; padding: 12px; margin: 8px 0 6px; background: var(--panel-2); font-size: 12.5px; color: var(--ink-2); }
+.srcbox b { color: var(--ink); }
+.srcbox .row { display: flex; justify-content: space-between; gap: 8px; }
+.srcbox .when { color: var(--ink-3); margin: 6px 0 10px; display: flex; align-items: center; gap: 6px; }
+.srcbox .bar, #gmailBox .bar { height: 3px; border-radius: 3px; background: var(--line); overflow: hidden; margin: 6px 0 10px; }
+.srcbox .bar i, #gmailBox .bar i { display: block; height: 100%; width: 35%; background: var(--accent); border-radius: 3px; animation: indet 1.2s ease-in-out infinite; }
+@keyframes indet { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
+.main { min-width: 0; padding: 28px 36px 60px; transition: margin-right .2s; }
+.view { display: none; max-width: 1180px; margin: 0 auto; }
+.view.on { display: block; }
+.mtop { display: none; }
+.tabbar { display: none; }
+
+/* ---------- common */
+.btn { height: 36px; padding: 0 14px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--panel); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 7px; white-space: nowrap; font-weight: 550; text-decoration: none; }
+.btn:hover { border-color: var(--ink-3); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn.ghost { border-color: transparent; background: transparent; }
+.btn.ghost:hover { background: var(--sunk); }
+.btn.sm { height: 30px; padding: 0 10px; font-size: 13px; border-radius: 8px; }
+.btn.block { width: 100%; }
+.btn:disabled { opacity: .55; cursor: default; filter: none; }
+.linkbtn { border: 0; background: none; padding: 0; color: var(--accent-2); cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; }
+.linkbtn:hover { text-decoration: underline; }
+h1.page { font-size: 26px; line-height: 1.2; letter-spacing: -.025em; margin: 0 0 6px; font-weight: 750; }
+.lede { color: var(--ink-2); margin: 0 0 22px; font-size: 15px; }
+.card-box { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line-2); background: var(--panel); border-radius: 999px; padding: 5px 12px; font-size: 13px; cursor: pointer; white-space: nowrap; font-weight: 550; color: var(--ink-2); }
+.chip:hover { border-color: var(--ink-3); color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip .x { opacity: .6; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.inp, select.sel { height: 38px; border: 1px solid var(--line-2); border-radius: 9px; background: var(--panel); padding: 0 11px; outline: none; }
+.inp:focus, select.sel:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+kbd { font: 11px/1 var(--font); padding: 3px 6px; border: 1px solid var(--line-2); border-bottom-width: 2px; border-radius: 5px; color: var(--ink-3); background: var(--panel); }
+
+/* ---------- verdict pills & avatars */
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 650; padding: 3px 9px 3px 7px; border-radius: 999px; white-space: nowrap; line-height: 1.35; }
+.pill svg.i { width: 13px; height: 13px; stroke-width: 2.4; }
+.pill.early { background: var(--early-bg); color: var(--early); }
+.pill.good { background: var(--good-bg); color: var(--good); }
+.pill.ghost, .pill.crowded.bad { background: var(--bad-bg); color: var(--bad); }
+.pill.mass, .pill.hype, .pill.crowded { background: var(--warn-bg); color: var(--warn); }
+.pill.status { background: var(--status-bg); color: var(--status); text-transform: capitalize; }
+.pill.new { background: var(--accent-soft); color: var(--accent-2); }
+.pill.excl { background: var(--series-soft); color: var(--series-ink); }
+.av { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font-weight: 700; font-size: 14px; flex: none; letter-spacing: -.02em; }
+.av.lg { width: 52px; height: 52px; font-size: 17px; border-radius: 13px; }
+.av.sm { width: 30px; height: 30px; font-size: 11.5px; border-radius: 8px; }
+
+/* ---------- job cards */
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.jc { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 15px 16px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 10px; transition: border-color .12s, box-shadow .12s, transform .12s; position: relative; min-width: 0; }
+.jc:hover { border-color: var(--line-2); box-shadow: var(--shadow-2); }
+.jc:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.jc.sel { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.jc .top { display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
+.jc .tt { min-width: 0; flex: 1; }
+.jc .title { font-weight: 680; font-size: 14.5px; line-height: 1.32; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.jc.seen .title { color: var(--ink-2); }
+.jc .co { color: var(--ink-2); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+.jc .pay { font-weight: 720; font-size: 16px; letter-spacing: -.01em; }
+.jc .pay small { font-weight: 500; font-size: 12.5px; color: var(--ink-3); }
+.jc .pay.none { font-size: 13.5px; font-weight: 550; color: var(--ink-3); }
+.jc .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 12.5px; color: var(--ink-3); }
+.jc .meta .dot::before { content: "·"; margin-right: 10px; }
+.save { position: absolute; top: 11px; right: 11px; border: 0; background: var(--panel); width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: var(--ink-3); cursor: pointer; }
+.save:hover { color: var(--accent); background: var(--accent-soft); }
+.save.on { color: var(--accent); }
+.save.on svg { fill: currentColor; }
+.jc .top { padding-right: 30px; }
+/* list variant */
+.list { display: flex; flex-direction: column; gap: 10px; }
+.jc.row { flex-direction: row; align-items: center; gap: 14px; padding: 14px 16px; }
+.jc.row .top { flex: 1; }
+.jc.row .side { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; padding-right: 34px; }
+.jc.row .save { top: 50%; transform: translateY(-50%); }
+.jc.row .meta { margin-top: 7px; }
+
+/* ---------- home */
+.hello { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; margin-bottom: 22px; }
+.hello .roles { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 10px; }
+.rolechip { background: var(--panel); border: 1px solid var(--line-2); border-radius: 999px; padding: 3px 11px; font-size: 13px; font-weight: 600; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 16px; }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.kpi:hover { border-color: var(--line-2); box-shadow: var(--shadow-2); }
+.kpi .lbl { font-size: 12.5px; color: var(--ink-3); font-weight: 600; display: flex; align-items: center; gap: 7px; }
+.kpi .val { font-size: 28px; font-weight: 750; letter-spacing: -.03em; line-height: 1.15; }
+.kpi .sub { font-size: 12.5px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi svg.spark { width: 100%; height: 30px; margin-top: 4px; }
+.shield { display: flex; align-items: center; gap: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 16px; margin-bottom: 30px; font-size: 13.5px; color: var(--ink-2); }
+.shield .ico { width: 34px; height: 34px; border-radius: 9px; background: var(--good-bg); color: var(--good); display: grid; place-items: center; flex: none; }
+.shield b { color: var(--ink); }
+.shield .linkbtn { margin-left: auto; white-space: nowrap; }
+.sec { margin-bottom: 34px; }
+.sec-h { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.sec-h h2 { font-size: 18px; margin: 0; letter-spacing: -.015em; display: flex; align-items: center; gap: 9px; }
+.sec-h h2 .ico { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; }
+.sec-h p { margin: 3px 0 0; color: var(--ink-3); font-size: 13px; }
+.sec-empty { padding: 26px; text-align: center; color: var(--ink-3); background: var(--panel); border: 1px dashed var(--line-2); border-radius: var(--r); }
+.skel { border-radius: var(--r); background: linear-gradient(90deg, var(--panel) 0%, var(--panel-2) 50%, var(--panel) 100%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border: 1px solid var(--line); min-height: 150px; }
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ---------- search */
+.searchbar { position: relative; margin-bottom: 14px; }
+.searchbar svg.i { position: absolute; left: 16px; top: 16px; color: var(--ink-3); width: 20px; height: 20px; }
+.searchbar input { width: 100%; height: 52px; border: 1px solid var(--line-2); border-radius: 13px; background: var(--panel); padding: 0 90px 0 48px; font-size: 16px; outline: none; box-shadow: var(--shadow-1); }
+.searchbar input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.searchbar kbd { position: absolute; right: 16px; top: 17px; }
+.quick { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 0 16px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+.filters select.sel { height: 34px; font-size: 13px; padding: 0 8px; max-width: 190px; }
+.filters select.sel.set { border-color: var(--ink); background: var(--sunk); font-weight: 600; }
+.filters .linkbtn { font-size: 13px; margin-left: 4px; }
+.res-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.res-h .count { font-size: 15px; color: var(--ink-2); }
+.res-h .count b { color: var(--ink); font-size: 17px; }
+.paystrip { display: flex; align-items: center; gap: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 16px; margin-bottom: 14px; cursor: pointer; }
+.paystrip:hover { border-color: var(--line-2); }
+.paystrip .t { font-size: 13px; color: var(--ink-2); }
+.paystrip .t b { color: var(--ink); font-size: 15px; }
+.paystrip svg { width: 150px; height: 34px; flex: none; margin-left: auto; }
+.more { margin: 16px auto 0; display: flex; }
+.empty { text-align: center; padding: 50px 20px; color: var(--ink-3); background: var(--panel); border: 1px dashed var(--line-2); border-radius: var(--r); }
+.empty h3 { color: var(--ink); margin: 0 0 6px; font-size: 16px; }
+
+/* ---------- drawer */
+.scrim { position: fixed; inset: 0; background: rgba(15,12,10,.32); z-index: 30; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.scrim.on { opacity: 1; pointer-events: auto; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(540px, 100vw); background: var(--panel); border-left: 1px solid var(--line); z-index: 40; transform: translateX(102%); transition: transform .22s ease; overflow-y: auto; box-shadow: var(--shadow-2); }
+.drawer.open { transform: none; }
+@media (min-width: 1500px) {
+  body.docked .main { margin-right: 540px; }
+  body.docked .scrim { display: none; }
+}
+.d-head { padding: 20px 22px 16px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--panel); z-index: 2; }
+.d-head .row1 { display: flex; gap: 14px; align-items: flex-start; }
+.d-head h2 { font-size: 19px; line-height: 1.28; margin: 0 0 3px; letter-spacing: -.015em; overflow-wrap: anywhere; }
+.d-head .co { color: var(--ink-2); font-size: 13.5px; }
+.d-head .legal { color: var(--ink-3); font-size: 12px; }
+.d-close { margin-left: auto; flex: none; }
+.d-pay { display: flex; align-items: baseline; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.d-pay .big { font-size: 24px; font-weight: 760; letter-spacing: -.02em; }
+.d-pay small { color: var(--ink-3); }
+.d-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.d-sec { padding: 16px 22px; border-bottom: 1px solid var(--line); }
+.d-sec:last-child { border-bottom: 0; }
+.d-sec h4 { margin: 0 0 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 650; }
+.callout { display: flex; gap: 11px; align-items: flex-start; border-radius: 11px; padding: 12px 14px; font-size: 13.5px; }
+.callout b { display: block; font-size: 14px; }
+.callout.early { background: var(--early-bg); color: var(--early); }
+.callout.good { background: var(--good-bg); color: var(--good); }
+.callout.ghost { background: var(--bad-bg); color: var(--bad); }
+.callout.mass, .callout.hype, .callout.crowded { background: var(--warn-bg); color: var(--warn); }
+.callout span { color: var(--ink-2); }
+.pts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.pts li { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; color: var(--ink-2); }
+.pts .ok, .pts .no { width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center; flex: none; margin-top: 1px; }
+.pts .ok { background: var(--good-bg); color: var(--good); }
+.pts .no { background: var(--warn-bg); color: var(--warn); }
+.pts svg.i { width: 13px; height: 13px; stroke-width: 2.6; }
+.mk { margin-top: 2px; }
+.mk svg { width: 100%; height: 64px; display: block; overflow: visible; }
+.mk .cap { font-size: 13px; color: var(--ink-2); margin-top: 8px; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { border: 1px solid var(--line-2); background: var(--panel); border-radius: 8px; padding: 6px 11px; cursor: pointer; font-size: 13px; font-weight: 550; }
+.seg button:hover { border-color: var(--ink-3); }
+.seg button[aria-pressed="true"] { background: var(--status); border-color: var(--status); color: #fff; }
+.seg button.hide[aria-pressed="true"] { background: var(--ink-3); border-color: var(--ink-3); }
+textarea.note { width: 100%; min-height: 64px; margin-top: 10px; border: 1px solid var(--line-2); border-radius: 9px; padding: 9px 11px; background: var(--panel-2); resize: vertical; }
+textarea.note:focus { outline: none; border-color: var(--accent); background: var(--panel); }
+.where a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; margin-bottom: 7px; }
+.where a:hover { border-color: var(--accent); }
+.where a.closed { opacity: .55; }
+.where .nm { font-weight: 620; }
+.where small { display: block; color: var(--ink-3); font-size: 12px; }
+.where .go { margin-left: auto; color: var(--ink-3); }
+.kvs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
+.kv small { display: block; color: var(--ink-3); font-size: 12px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 12px; padding: 3px 9px; border-radius: 6px; background: var(--sunk); color: var(--ink-2); }
+.desc { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink-2); font-size: 13.5px; line-height: 1.65; }
+.desc.clamp { max-height: 300px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 65%, transparent); mask-image: linear-gradient(#000 65%, transparent); }
+
+/* ---------- market pay */
+.payhead { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.payhead .inp { flex: 1; min-width: 220px; height: 46px; font-size: 15px; }
+.payhead .btn { height: 46px; }
+.bigstats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 18px 0 14px; }
+.bigstat { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; }
+.bigstat .lbl { font-size: 12.5px; color: var(--ink-3); font-weight: 600; }
+.bigstat .val { font-size: 26px; font-weight: 750; letter-spacing: -.025em; margin-top: 2px; }
+.bigstat .sub { font-size: 12.5px; color: var(--ink-2); }
+.chartcard { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px 14px; margin-bottom: 14px; position: relative; }
+.chartcard h3 { margin: 0 0 2px; font-size: 15px; }
+.chartcard .hint { margin: 0 0 12px; color: var(--ink-3); font-size: 13px; }
+.chartcard svg.hist { width: 100%; height: 240px; display: block; overflow: visible; }
+.two { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 14px; }
+.lvl { display: grid; grid-template-columns: 170px minmax(0, 1fr) 64px; align-items: center; gap: 12px; padding: 7px 0; font-size: 13px; }
+.lvl .nm { color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lvl .nm small { color: var(--ink-3); }
+.lvl .v { text-align: right; font-weight: 650; }
+.lvl svg { width: 100%; height: 18px; display: block; overflow: visible; }
+table.t { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.t th { text-align: left; font-weight: 600; color: var(--ink-3); font-size: 12px; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+table.t td { padding: 8px; border-bottom: 1px solid var(--line); }
+table.t td.r, table.t th.r { text-align: right; }
+table.t tr:last-child td { border-bottom: 0; }
+details.tbl { margin-top: 10px; font-size: 13px; }
+details.tbl summary { cursor: pointer; color: var(--ink-3); }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12.5px; padding: 6px 9px; border-radius: 7px; white-space: nowrap; transform: translate(-50%, -100%); margin-top: -8px; opacity: 0; transition: opacity .1s; z-index: 5; }
+.tip.on { opacity: 1; }
+
+/* ---------- tracker */
+.trk-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.trk-head .lede { margin: 0; }
+.trk-tools { display: flex; gap: 10px; align-items: center; }
+.attn { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; }
+.attn-card { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--line-2); border-radius: var(--r); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.attn-card.k-int { border-left-color: var(--status); }
+.attn-card.k-ask { border-left-color: var(--good); }
+.attn-card.k-fu { border-left-color: var(--warn); }
+.attn-card .lbl { display: flex; gap: 6px; align-items: center; font-size: 12.5px; font-weight: 650; color: var(--ink-2); }
+.attn-card .t { cursor: pointer; min-width: 0; }
+.attn-card .t b { display: block; font-size: 14px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.attn-card .t span { color: var(--ink-3); font-size: 12.5px; }
+.attn-card .t:hover b { color: var(--accent-2); }
+.acts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+svg.wk { width: 100%; height: 150px; display: block; overflow: visible; }
+.board { display: grid; grid-template-columns: repeat(5, minmax(186px, 1fr)); gap: 14px; overflow-x: auto; padding-bottom: 10px; }
+.col { background: var(--sunk); border-radius: var(--r); padding: 12px; min-height: 260px; border: 2px solid transparent; }
+.col.drop { border-color: var(--accent); background: var(--accent-soft); }
+.col h3 { margin: 0 2px 12px; font-size: 13.5px; display: flex; align-items: center; gap: 8px; }
+.col h3 .dotc { width: 9px; height: 9px; border-radius: 50%; }
+.col h3 span.n { margin-left: auto; color: var(--ink-3); font-weight: 600; }
+.tcard { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 11px; margin-bottom: 9px; cursor: pointer; }
+.tcard:hover { box-shadow: var(--shadow-2); border-color: var(--line-2); }
+.tcard:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tcard .r1 { display: flex; gap: 10px; }
+.tcard .title { font-weight: 640; font-size: 13.5px; line-height: 1.3; }
+.tcard .co { color: var(--ink-2); font-size: 12.5px; margin-top: 1px; }
+.tcard .when { font-size: 12.5px; color: var(--ink-2); margin-top: 8px; }
+.warnc { color: var(--warn); font-weight: 650; }
+.intc { color: var(--status); font-weight: 650; }
+.tcard .note { font-size: 12.5px; color: var(--ink-2); background: var(--panel-2); border-radius: 7px; padding: 6px 8px; margin-top: 8px; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.tcard .r2 { display: flex; justify-content: space-between; align-items: center; margin-top: 9px; gap: 6px; font-size: 12px; }
+.tcard select { height: 28px; font-size: 12.5px; border: 1px solid var(--line-2); border-radius: 7px; background: var(--panel); }
+.col .hint { color: var(--ink-3); font-size: 12.5px; text-align: center; padding: 22px 10px; border: 1px dashed var(--line-2); border-radius: 10px; }
+.pill.st-saved { background: var(--sunk); color: var(--ink-2); }
+.pill.st-applied { background: var(--series-soft); color: var(--series-ink); }
+.pill.st-interview { background: var(--status-bg); color: var(--status); }
+.pill.st-offer { background: var(--early-bg); color: var(--early); }
+.pill.st-rejected, .pill.st-withdrawn { background: var(--bad-bg); color: var(--bad); }
+.pill.st-no_reply { background: var(--sunk); color: var(--ink-3); }
+.lt-tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+.lt-tools .inp { flex: 1; min-width: 200px; max-width: 360px; }
+.lt-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); overflow-x: auto; }
+table.lt td, table.lt th { padding: 10px 12px; white-space: nowrap; }
+table.lt tbody tr { cursor: pointer; }
+table.lt tbody tr:hover { background: var(--panel-2); }
+table.lt th.sortable { cursor: pointer; user-select: none; }
+table.lt th.sortable:hover { color: var(--ink); }
+.lt-job { display: flex; gap: 10px; align-items: center; white-space: normal; min-width: 240px; }
+.lt-job b { display: block; font-weight: 640; }
+.lt-job span { color: var(--ink-3); font-size: 12.5px; }
+.fgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+.fld { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.fld.wide { grid-column: 1 / -1; }
+.fld small { color: var(--ink-3); font-size: 12px; font-weight: 600; }
+.fld .inp, .fld select.sel { width: 100%; height: 36px; }
+.fld textarea.note { margin-top: 0; min-height: 110px; }
+.ints { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.ints li { display: flex; gap: 8px; align-items: center; border: 1px solid var(--line); border-left: 3px solid var(--status); border-radius: 9px; padding: 9px 10px; }
+.ints li.past { opacity: .6; border-left-color: var(--line-2); }
+.ints li > div { flex: 1; min-width: 0; }
+.ints b { display: block; font-size: 13.5px; }
+.ints span, .ints small { display: block; color: var(--ink-2); font-size: 12.5px; }
+.int-add { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.int-add .inp, .int-add .sel { width: 100%; height: 34px; font-size: 13px; }
+.int-add .btn { justify-self: start; }
+.tl { list-style: none; margin: 0 0 12px; padding: 0 0 0 4px; }
+.tl li { position: relative; padding: 0 0 12px 18px; font-size: 13px; color: var(--ink-2); display: flex; gap: 10px; }
+.tl li::before { content: ""; position: absolute; left: 0; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--line-2); }
+.tl li::after { content: ""; position: absolute; left: 3.5px; top: 16px; bottom: 0; width: 1px; background: var(--line); }
+.tl li:last-child::after { display: none; }
+.tl li.k-status::before { background: var(--series); }
+.tl li.k-interview::before { background: var(--status); }
+.tl li.k-followup::before { background: var(--warn); }
+.tl .dt { color: var(--ink-3); flex: none; width: 52px; }
+.tl-add { display: flex; gap: 8px; }
+.tl-add .inp { flex: 1; height: 34px; font-size: 13px; }
+.callout .acts { margin-top: 8px; }
+.help { color: var(--ink-3); font-size: 13px; }
+.themebtn { display: flex; align-items: center; gap: 11px; padding: 9px 10px; border-radius: 9px; border: 0; background: none; color: var(--ink-2); font-weight: 550; cursor: pointer; text-align: left; width: 100%; }
+.themebtn:hover { background: var(--sunk); color: var(--ink); }
+.mtop .iconbtn { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--panel); display: grid; place-items: center; cursor: pointer; margin-left: auto; color: var(--ink-2); }
+.mtop .iconbtn + .btn { margin-left: 0; }
+@media (max-width: 640px) { .fgrid, .int-add { grid-template-columns: minmax(0, 1fr); } .board { grid-template-columns: repeat(5, minmax(240px, 82vw)); } }
+
+/* ---------- import & settings */
+.narrow { max-width: 780px; }
+.drop { border: 2px dashed var(--line-2); border-radius: 16px; background: var(--panel); padding: 44px 20px; text-align: center; cursor: pointer; transition: border-color .12s, background .12s; }
+.drop:hover, .drop.over { border-color: var(--accent); background: var(--accent-soft); }
+.drop h3 { margin: 12px 0 4px; font-size: 17px; }
+.drop p { margin: 0; color: var(--ink-3); }
+.stack > * + * { margin-top: 14px; }
+.card-box h3 { margin: 0 0 8px; font-size: 15px; }
+.card-box ol, .card-box ul { margin: 0; padding-left: 20px; color: var(--ink-2); }
+.card-box li { margin: 5px 0; }
+.res-line { display: flex; gap: 10px; align-items: center; padding: 7px 0; border-top: 1px solid var(--line); font-size: 13.5px; }
+.res-line:first-of-type { border-top: 0; }
+.res-line a { cursor: pointer; font-weight: 600; text-decoration: none; }
+.res-line a:hover { text-decoration: underline; }
+.path { font: 12.5px/1.4 ui-monospace, "Cascadia Mono", Consolas, monospace; background: var(--sunk); padding: 8px 10px; border-radius: 8px; overflow-wrap: anywhere; margin: 6px 0 4px; }
+.form-row { margin-bottom: 20px; }
+.form-row > label:not(.toggle), .form-row > .lbl { display: block; font-weight: 650; margin-bottom: 8px; }
+.form-row .help { color: var(--ink-3); font-size: 13px; margin: -4px 0 9px; }
+.roleinput { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; border: 1px solid var(--line-2); border-radius: 11px; padding: 6px; background: var(--panel); min-height: 46px; }
+.roleinput:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.roleinput input { border: 0; outline: none; background: none; flex: 1; min-width: 160px; height: 32px; padding: 0 6px; }
+.roleinput .chip { background: var(--ink); color: var(--bg); border-color: var(--ink); padding: 4px 8px 4px 12px; }
+.sugg .chip small { color: var(--ink-3); font-weight: 500; }
+.toggle { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; cursor: pointer; color: var(--ink-2); }
+.toggle input { accent-color: var(--accent); margin-top: 3px; width: 16px; height: 16px; }
+.toggle b { color: var(--ink); font-weight: 600; display: block; }
+
+/* ---------- Gmail connect */
+.gm-head { display: flex; gap: 14px; align-items: flex-start; }
+.gm-head .ico { width: 42px; height: 42px; border-radius: 11px; background: var(--accent-soft); color: var(--accent-2); display: grid; place-items: center; flex: none; }
+.gm-head.ok .ico { background: var(--good-bg); color: var(--good); }
+.gm-head h3 { margin: 0 0 3px; font-size: 16px; }
+.gm-head p { margin: 0; color: var(--ink-2); }
+.steps { list-style: none; padding: 0 !important; margin: 18px 0 0 !important; counter-reset: st; }
+.steps > li { counter-increment: st; position: relative; padding: 0 0 18px 40px; margin: 0 !important; }
+.steps > li::before { content: counter(st); position: absolute; left: 0; top: -1px; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--bg); font-weight: 700; font-size: 13px; display: grid; place-items: center; }
+.steps > li b.t { display: block; color: var(--ink); margin-bottom: 3px; }
+.steps .help { color: var(--ink-3); font-size: 13px; margin: 4px 0 0; }
+.gm-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; margin-top: 8px; }
+.gm-form .inp { width: 100%; }
+.gm-err { color: var(--bad); font-size: 13.5px; margin-top: 8px; }
+.gm-safe { display: flex; gap: 10px; background: var(--panel-2); border-radius: 10px; padding: 11px 13px; font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+.gm-safe svg { flex: none; color: var(--good); margin-top: 1px; }
+.gm-stats { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 14px 0 0; font-size: 13.5px; color: var(--ink-2); }
+.gm-stats b { color: var(--ink); font-size: 18px; display: block; }
+.gm-actions { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
+.promo { display: flex; align-items: center; gap: 12px; background: var(--accent-soft); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 16px; margin-bottom: 30px; font-size: 13.5px; color: var(--ink-2); }
+.promo b { color: var(--ink); }
+.promo .btn { margin-left: auto; white-space: nowrap; }
+@media (max-width: 640px) { .gm-form { grid-template-columns: minmax(0, 1fr); } .promo { flex-wrap: wrap; } .promo .btn { margin-left: 0; } }
+
+/* ---------- commute */
+.pill.mode { background: var(--series-soft); color: var(--series-ink); }
+.commute { display: flex; gap: 14px; align-items: center; }
+.commute .big { font-size: 22px; font-weight: 760; letter-spacing: -.02em; }
+.commute small { display: block; color: var(--ink-3); font-size: 12.5px; }
+.postal-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.postal-row .inp { width: 130px; letter-spacing: .08em; }
+
+/* ---------- CV match */
+.pill.mt-strong { background: var(--early-bg); color: var(--early); }
+.pill.mt-good { background: var(--good-bg); color: var(--good); }
+.pill.mt-some { background: var(--sunk); color: var(--ink-2); }
+.mrow { display: flex; align-items: center; gap: 16px; }
+.mscore { flex: none; }
+.mscore b { display: block; font-size: 28px; font-weight: 760; letter-spacing: -.02em; line-height: 1.1; }
+.mscore small { font-size: 12.5px; font-weight: 650; }
+.mscore.mt-strong { color: var(--early); } .mscore.mt-good { color: var(--good); } .mscore.mt-some, .mscore.mt-low { color: var(--ink-2); }
+.mbar { flex: 1; height: 8px; border-radius: 99px; background: var(--sunk); overflow: hidden; }
+.mbar i { display: block; height: 100%; border-radius: 99px; background: var(--ink-3); }
+.mbar i.mt-strong { background: var(--early); } .mbar i.mt-good { background: var(--good); }
+.mlist { margin-top: 12px; }
+.mlist > small { display: block; color: var(--ink-3); font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+.tag.ok { background: var(--early-bg); color: var(--early); display: inline-flex; gap: 4px; align-items: center; }
+.tag.miss { background: var(--warn-bg); color: var(--warn); border: 0; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; font: inherit; font-size: 12px; padding: 3px 9px; border-radius: 6px; }
+.tag.miss:hover { filter: brightness(.96); text-decoration: underline; }
+.tag small { opacity: .75; margin-left: 2px; }
+.tag svg.i { width: 12px; height: 12px; stroke-width: 2.6; }
+.cv-promo { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 13.5px; color: var(--ink-2); background: var(--series-soft); border-radius: 10px; padding: 10px 12px; }
+.cv-promo b { color: var(--ink); }
+.cv-file { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.skwrap { display: flex; flex-wrap: wrap; gap: 6px; }
+.skchip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line-2); border-radius: 999px; padding: 3px 4px 3px 11px; font-size: 13px; font-weight: 550; background: var(--panel); }
+.skchip.added { border-color: var(--good); }
+.skchip small { color: var(--ink-3); font-weight: 500; font-size: 11.5px; }
+.skchip button { border: 0; background: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: var(--ink-3); }
+.skchip button:hover { background: var(--bad-bg); color: var(--bad); }
+.sk-h { margin: 16px 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 650; }
+@media (max-width: 640px) { #cvBody .kpis { grid-template-columns: minmax(0, 1fr) !important; } }
+
+/* ---------- onboarding modal */
+.modal { position: fixed; inset: 0; z-index: 60; background: rgba(15,12,10,.45); display: grid; place-items: center; padding: 20px; }
+.modal .box { background: var(--panel); border-radius: 18px; width: min(680px, 100%); max-height: calc(100vh - 40px); overflow-y: auto; box-shadow: var(--shadow-2); }
+.modal .mh { padding: 26px 28px 8px; }
+.modal .mh h2 { margin: 0 0 6px; font-size: 22px; letter-spacing: -.02em; }
+.modal .mh p { margin: 0; color: var(--ink-2); }
+.modal .mb { padding: 18px 28px 6px; }
+.modal .mf { padding: 14px 28px 24px; display: flex; gap: 10px; align-items: center; justify-content: flex-end; border-top: 1px solid var(--line); position: sticky; bottom: 0; background: var(--panel); }
+.modal .mf .linkbtn { margin-right: auto; color: var(--ink-3); font-weight: 550; }
+
+/* ---------- toast */
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--bg); padding: 11px 16px; border-radius: 10px; box-shadow: var(--shadow-2); opacity: 0; transition: .2s; pointer-events: none; z-index: 80; max-width: calc(100vw - 32px); display: flex; align-items: center; gap: 10px; }
+.toast.on { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+.toast button { background: none; border: 0; color: var(--accent); font-weight: 700; cursor: pointer; }
+
+/* ---------- responsive */
+@media (max-width: 1240px) { .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .kpis, .bigstats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 900px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .nav { display: none; }
+  .main { padding: 14px 16px 90px; }
+  .mtop { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .mtop .brand { padding: 0; font-size: 16px; }
+  .mtop .brand .logo { width: 28px; height: 28px; }
+  .mtop .btn { margin-left: auto; }
+  .tabbar { display: grid; grid-template-columns: repeat(6, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--panel); border-top: 1px solid var(--line); padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); }
+  .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 11px; font-weight: 600; color: var(--ink-3); text-decoration: none; padding: 4px 0; }
+  .tabbar a[aria-current="page"] { color: var(--accent-2); }
+  .two { grid-template-columns: minmax(0, 1fr); }
+  .lvl { grid-template-columns: 120px minmax(0, 1fr) 56px; }
+  h1.page { font-size: 22px; }
+}
+@media (max-width: 640px) {
+  .grid3 { grid-template-columns: minmax(0, 1fr); }
+  .kpis, .bigstats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .kpi, .bigstat { padding: 13px 14px; }
+  .kpi .val, .bigstat .val { font-size: 22px; }
+  .kpi .sub { white-space: normal; }
+  .hello { margin-bottom: 16px; }
+  .jc.row { flex-direction: column; align-items: stretch; }
+  .jc.row .side { text-align: left; align-items: flex-start; padding-right: 0; flex-direction: row; justify-content: space-between; }
+  .jc.row .save { top: 11px; transform: none; }
+  .searchbar kbd { display: none; }
+  .searchbar input { padding-right: 16px; }
+  .board { grid-template-columns: repeat(5, minmax(240px, 82vw)); }
+  .shield { flex-wrap: wrap; }
+  .shield .linkbtn { margin-left: 46px; }
+  .modal { padding: 0; place-items: end stretch; }
+  .modal .box { border-radius: 18px 18px 0 0; max-height: 92vh; }
+  .modal .mh, .modal .mb, .modal .mf { padding-left: 18px; padding-right: 18px; }
+  .paystrip svg { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="nav" aria-label="Main">
+    <div class="brand"><span class="logo" id="logo1"></span><span>ChiongWork<small>Every SG job site, one feed</small></span></div>
+    <a href="#home" data-nav="home"><span data-icon="home"></span>For you</a>
+    <a href="#search" data-nav="search"><span data-icon="search"></span>Search jobs</a>
+    <a href="#pay" data-nav="pay"><span data-icon="chart"></span>Market pay</a>
+    <a href="#tracker" data-nav="tracker"><span data-icon="board"></span>Tracker<span class="badge" id="navTracked" hidden></span></a>
+    <a href="#cv" data-nav="cv"><span data-icon="file"></span>My CV</a>
+    <a href="#import" data-nav="import"><span data-icon="mail"></span>Email alerts</a>
+    <div class="spacer"></div>
+    <div class="srcbox" id="srcbox"></div>
+    <a href="#settings" data-nav="settings"><span data-icon="gear"></span>Settings &amp; data</a>
+    <button class="themebtn" id="navTheme"></button>
+  </nav>
+
+  <main class="main" id="main">
+    <div class="mtop">
+      <div class="brand"><span class="logo" id="logo2"></span>ChiongWork</div>
+      <button class="iconbtn" id="mTheme" aria-label="Switch light or dark mode"></button>
+      <button class="btn sm" id="mRefresh"><span data-icon="refresh"></span><span>Refresh</span></button>
+    </div>
+
+    <!-- FOR YOU -->
+    <section class="view" id="view-home" aria-labelledby="homeTitle">
+      <div class="hello">
+        <div>
+          <h1 class="page" id="homeTitle">Good day</h1>
+          <div class="roles" id="homeRoles"></div>
+        </div>
+        <button class="btn" id="editProfile"><span data-icon="sliders"></span>Edit what I'm looking for</button>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div id="shield"></div>
+      <div id="promo"></div>
+      <div id="sections"></div>
+    </section>
+
+    <!-- SEARCH -->
+    <section class="view" id="view-search">
+      <div class="searchbar">
+        <span data-icon="search"></span>
+        <label class="sr" for="q">Search jobs</label>
+        <input id="q" type="search" placeholder="Search 66,000+ Singapore jobs: title or company" autocomplete="off">
+        <kbd>/</kbd>
+      </div>
+      <div class="quick" id="quick"></div>
+      <div class="filters" id="filters">
+        <select class="sel" id="f-min_salary" aria-label="Minimum pay"><option value="">Any pay</option><option value="3000">$3k+ /mo</option><option value="4000">$4k+ /mo</option><option value="5000">$5k+ /mo</option><option value="6000">$6k+ /mo</option><option value="8000">$8k+ /mo</option><option value="10000">$10k+ /mo</option><option value="15000">$15k+ /mo</option></select>
+        <select class="sel" id="f-days" aria-label="Posted within"><option value="">Posted any time</option><option value="1">Last 24 hours</option><option value="3">Last 3 days</option><option value="7">Last 7 days</option><option value="14">Last 14 days</option><option value="30">Last 30 days</option></select>
+        <select class="sel" id="f-max_applicants" aria-label="Applicants"><option value="">Any applicants</option><option value="10">≤ 10 applicants</option><option value="30">≤ 30 applicants</option><option value="100">≤ 100 applicants</option></select>
+        <select class="sel" id="f-max_min" aria-label="Commute"><option value="">Any distance</option><option value="30">≤ 30 min from home</option><option value="45">≤ 45 min from home</option><option value="60">≤ 60 min from home</option></select>
+        <select class="sel" id="f-type" aria-label="Job type"><option value="">Any job type</option></select>
+        <select class="sel" id="f-level" aria-label="Level"><option value="">Any level</option></select>
+        <select class="sel" id="f-source" aria-label="Site"><option value="">All sites</option><option value="mcf">MyCareersFuture</option><option value="careers">Company career pages</option><option value="linkedin">LinkedIn (from alerts)</option><option value="jobstreet">JobStreet (from alerts)</option><option value="indeed">Indeed (from alerts)</option></select>
+        <select class="sel" id="f-sort" aria-label="Sort"><option value="best">Sort: Best bets first</option><option value="date">Sort: Newest</option><option value="salary">Sort: Highest pay</option><option value="applicants">Sort: Fewest applicants</option><option value="closing">Sort: Closing soonest</option><option value="match">Sort: Best CV match</option><option value="near">Sort: Closest to home</option></select>
+        <button class="linkbtn" id="clearFilters" hidden>Clear all</button>
+      </div>
+      <div id="paystrip"></div>
+      <div class="res-h"><div class="count" id="resultCount">Loading…</div></div>
+      <div class="list" id="list"></div>
+      <button class="btn more" id="more" hidden>Show more jobs</button>
+    </section>
+
+    <!-- MARKET PAY -->
+    <section class="view" id="view-pay">
+      <h1 class="page">What does it pay?</h1>
+      <p class="lede">Real advertised salaries from every live job in your feed. Use them to set your asking pay and spot lowball offers.</p>
+      <form class="payhead" id="payForm">
+        <label class="sr" for="payRole">Role</label>
+        <input class="inp" id="payRole" placeholder="A role, e.g. accountant, data analyst, nurse" autocomplete="off">
+        <button class="btn primary" type="submit"><span data-icon="chart"></span>Show pay</button>
+      </form>
+      <div class="chips" id="payRoles"></div>
+      <div id="payBody"></div>
+    </section>
+
+    <!-- TRACKER -->
+    <section class="view" id="view-tracker">
+      <div class="trk-head">
+        <div>
+          <h1 class="page">Your applications</h1>
+          <p class="lede">Every job you save keeps its own copy of the ad, a timeline and reminders. Saved in your data file on this computer.</p>
+        </div>
+        <div class="trk-tools">
+          <div class="chips" id="trkViews" role="group" aria-label="Layout"><button class="chip" data-v="board">Board</button><button class="chip" data-v="list">List</button></div>
+          <button class="btn primary" id="addJob"><span data-icon="plus"></span>Add a job</button>
+        </div>
+      </div>
+      <div id="trkAttn"></div>
+      <div id="trkBody"></div>
+      <div id="trkStats" style="margin-top:30px"></div>
+    </section>
+
+    <!-- MY CV -->
+    <section class="view narrow" id="view-cv">
+      <h1 class="page">Your CV</h1>
+      <p class="lede">Upload your CV once. Every job then shows how well you match, which of its skills you have, and what's missing. It also shows which skills employers keep asking for.</p>
+      <div id="cvBody"></div>
+    </section>
+
+    <!-- EMAIL ALERTS -->
+    <section class="view narrow" id="view-import">
+      <h1 class="page">LinkedIn, JobStreet &amp; Indeed jobs</h1>
+      <p class="lede">Those sites don't allow other apps to pull their jobs. But they email you job alerts, and ChiongWork can read those alerts and put every job in them into your feed, next to MyCareersFuture.</p>
+      <div class="stack">
+        <div class="card-box" id="gmailBox"><div class="skel" style="min-height:160px"></div></div>
+        <div id="importResults" class="stack"></div>
+        <details class="card-box">
+          <summary style="cursor:pointer;font-weight:650">Not using Gmail? Add alert emails as files</summary>
+          <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose alert email files" style="margin-top:14px">
+            <span data-icon="mail" data-size="lg"></span>
+            <h3>Drop alert emails here</h3>
+            <p>.eml files, or a Google Takeout .mbox. You can also click to choose files.</p>
+            <input type="file" id="file" accept=".eml,.mbox,message/rfc822" multiple hidden>
+          </div>
+          <ol style="margin-top:14px">
+            <li><b>Outlook:</b> open the email, click <b>…</b>, then <b>Save as</b>. Or drag it from Outlook into a folder.</li>
+            <li><b>Gmail, one email:</b> open the alert, click <b>⋮</b>, then <b>Download message</b>.</li>
+          </ol>
+        </details>
+        <div class="card-box">
+          <h3>What happens to these jobs</h3>
+          <ul>
+            <li>If the job is also on MyCareersFuture, it's merged into one row and gets the real salary and applicant count, which LinkedIn often hides.</li>
+            <li>ChiongWork never logs in to LinkedIn, JobStreet or Indeed. It only reads the emails they sent you.</li>
+            <li>Email-only jobs drop off after 30 days, since emails don't say when a job closes.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view narrow" id="view-settings">
+      <h1 class="page">Settings &amp; data</h1>
+      <p class="lede">What you're looking for, and where everything is kept.</p>
+      <div class="stack">
+        <div class="card-box"><h3>What you're looking for</h3><div id="profileForm"></div></div>
+        <a class="card-box" href="#cv" style="display:flex;align-items:center;gap:12px;text-decoration:none"><span data-icon="file"></span><span><b>Your CV</b><br><span class="muted" id="setCv">Upload it to see your match score on every job</span></span><span data-icon="arrow" style="margin-left:auto"></span></a>
+        <a class="card-box" href="#import" style="display:flex;align-items:center;gap:12px;text-decoration:none"><span data-icon="mail"></span><span><b>LinkedIn, JobStreet &amp; Indeed jobs</b><br><span class="muted" id="setGmail">Connect your Gmail so their job alerts appear here</span></span><span data-icon="arrow" style="margin-left:auto"></span></a>
+        <div class="card-box"><h3>Appearance</h3><div class="chips" role="group" aria-label="Colour theme">
+          <button class="chip" data-theme-opt="auto">Match my computer</button><button class="chip" data-theme-opt="light">Light</button><button class="chip" data-theme-opt="dark">Dark</button></div></div>
+        <div class="card-box" id="dataBox"></div>
+        <div class="card-box" id="sourcesBox"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Job details" aria-hidden="true"></aside>
+<nav class="tabbar" aria-label="Main">
+  <a href="#home" data-nav="home"><span data-icon="home"></span>For you</a>
+  <a href="#search" data-nav="search"><span data-icon="search"></span>Search</a>
+  <a href="#pay" data-nav="pay"><span data-icon="chart"></span>Pay</a>
+  <a href="#tracker" data-nav="tracker"><span data-icon="board"></span>Tracker</a>
+  <a href="#import" data-nav="import"><span data-icon="mail"></span>Alerts</a>
+  <a href="#settings" data-nav="settings"><span data-icon="gear"></span>More</a>
+</nav>
+<div class="modal" id="onboard" hidden role="dialog" aria-modal="true" aria-labelledby="obTitle"></div>
+<div class="modal" id="dlg" hidden role="dialog" aria-modal="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+// ============================================================ helpers
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+function h(tag, attrs, ...kids) {
+  const el = tag === "svg" || attrs?.svg ? document.createElementNS("http://www.w3.org/2000/svg", tag) : document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false || k === "svg") continue;
+    if (k === "class") el.setAttribute("class", v);
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const kid of kids.flat(Infinity)) if (kid != null && kid !== false) el.append(kid instanceof Node ? kid : String(kid));
+  return el;
+}
+// replaceChildren() would print null/false as text and arrays as "[object …]": flatten and drop empties first.
+const fill = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter(k => k != null && k !== false && k !== ""));
+const S = (tag, attrs, ...kids) => h(tag, { ...attrs, svg: true }, ...kids);
+const ICONS = {
+  home: "M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z",
+  search: "M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5",
+  chart: "M4 20V10M10 20V4M16 20v-7M22 20H2",
+  board: "M4 4h5v16H4zM10.5 4h4v10h-4zM16 4h4v13h-4z",
+  mail: "M3 6h18v12H3zM3 7l9 6 9-6",
+  gear: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
+  refresh: "M21 12a9 9 0 1 1-2.6-6.4M21 4v5h-5",
+  bookmark: "M6 3h12v18l-6-4.5L6 21z",
+  bolt: "M13 2 4 14h7l-1 8 9-12h-7z",
+  check: "M5 12.5l4.5 4.5L19 7",
+  ghost: "M5 21V10a7 7 0 0 1 14 0v11l-2.5-2-2.3 2-2.2-2-2.2 2-2.3-2zM9.5 10h.01M14.5 10h.01",
+  megaphone: "M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1zM17 9a4 4 0 0 1 0 6",
+  users: "M16 20v-1.5A3.5 3.5 0 0 0 12.5 15h-5A3.5 3.5 0 0 0 4 18.5V20M10 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM20 20v-1.5a3.5 3.5 0 0 0-2.5-3.4M15.5 4.2a3.5 3.5 0 0 1 0 6.6",
+  ext: "M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5",
+  x: "M6 6l12 12M18 6 6 18",
+  shield: "M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6zM8.5 12l2.5 2.5 4.5-5",
+  sparkle: "M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z",
+  clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2",
+  building: "M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 9h4a1 1 0 0 1 1 1v11M8 8h3M8 12h3M8 16h3M2 21h20",
+  coin: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM14.8 9A2.6 2.6 0 0 0 12.4 8h-1a2.2 2.2 0 0 0 0 4.4h1.2a2.2 2.2 0 0 1 0 4.4h-1a2.6 2.6 0 0 1-2.4-1M12 6.5V8M12 16.8v1.4",
+  alert: "M12 9v4M12 17h.01M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z",
+  sliders: "M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0M14 4v4M8 10v4M16 16v4",
+  arrow: "M5 12h14M13 6l6 6-6 6",
+  plus: "M12 5v14M5 12h14",
+  trend: "M3 17l6-6 4 4 8-8M15 7h6v6",
+  folder: "M3 7a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z",
+  pin: "M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z",
+  file: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h4",
+  moon: "M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z",
+  sun: "M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 1.5v2M12 20.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1.5 12h2M20.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4",
+};
+function icon(name, size) { return S("svg", { class: "i" + (size ? " " + size : ""), viewBox: "0 0 24 24", "aria-hidden": "true" }, S("path", { d: ICONS[name] })); }
+for (const el of $$("[data-icon]")) el.replaceWith(icon(el.dataset.icon, el.dataset.size));
+for (const id of ["logo1", "logo2"]) $("#" + id).append(S("svg", { viewBox: "0 0 32 32", width: 17, height: 17, "aria-hidden": "true" }, S("path", { d: "M8 8.5l7.5 7.5L8 23.5M16.5 8.5 24 16l-7.5 7.5", fill: "none", stroke: "#fff", "stroke-width": 3.2, "stroke-linecap": "round", "stroke-linejoin": "round" })));
+
+const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : null;
+async function api(path, opts = {}) {
+  const r = await fetch(path, { ...opts, headers: { "X-SGJobs": "1", ...(opts.headers || {}) } });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok && r.status !== 409) throw new Error(data.error || `HTTP ${r.status}`);
+  return data;
+}
+const post = (path, body) => api(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+const nf = new Intl.NumberFormat("en-SG");
+const kfmt = v => v >= 1000 ? `${(v / 1000).toFixed(v % 1000 ? 1 : 0).replace(/\.0$/, "")}k` : String(v);
+const money = v => "$" + nf.format(Math.round(v));
+function salaryText(j) {
+  if (!j.salary_min && !j.salary_max) return null;
+  const lo = j.salary_min, hi = j.salary_max;
+  if (j.salary_period === "hour") return hi && lo && hi !== lo ? `$${lo}–${hi}` : `$${lo || hi}`;
+  return hi && lo && hi !== lo ? `$${kfmt(lo)} – ${kfmt(hi)}` : `$${kfmt(lo || hi)}`;
+}
+const per = j => j.salary_period === "hour" ? " /hr" : " /mo";
+function daysAgo(iso) { if (!iso) return null; return Math.floor((Date.now() - new Date(iso.slice(0, 10) + "T00:00:00")) / 864e5); }
+function postedText(iso) { const d = daysAgo(iso); if (d == null) return ""; return d <= 0 ? "Posted today" : d === 1 ? "Posted yesterday" : d < 30 ? `Posted ${d}d ago` : "Posted " + new Date(iso.slice(0, 10)).toLocaleDateString("en-SG", { day: "numeric", month: "short" }); }
+function ago(iso) {
+  if (!iso) return "";
+  const mins = Math.round((Date.now() - new Date(iso)) / 6e4);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins} min ago`;
+  if (mins < 1440) return `${Math.round(mins / 60)} h ago`;
+  return `${Math.round(mins / 1440)} days ago`;
+}
+const fmtDate = iso => iso ? new Date(iso.slice(0, 10) + "T00:00:00").toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" }) : "—";
+let toastTimer;
+function toast(msg, action) {
+  const t = $("#toast");
+  fill(t, h("span", {}, msg), action ? h("button", { onclick: () => { action.fn(); t.classList.remove("on"); } }, action.label) : "");
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("on"), action ? 7000 : 2600);
+}
+
+// "STRIPE PAYMENTS SINGAPORE PTE. LTD." -> "Stripe Payments" (MCF uses ALL-CAPS legal names)
+const KEEP_UPPER = /^(?:[A-Z]{2,3}|[A-Z]&[A-Z]|[A-Z]+\d+|\d+[A-Z]+)$/;
+const ACRONYMS = new Set(["APAC", "ASEAN", "EMEA", "OCBC", "HSBC", "KPMG", "NTUC", "SATS", "UBS", "DBS", "UOB", "IBM", "SAP", "AWS", "NUHS", "SGH", "MOH", "MOE", "HDB", "SMRT", "PSA", "STEC", "IHIS", "GIC", "AIA", "FWD", "SPH", "NTU", "NUS", "SMU", "SUTD", "SIT", "SUSS", "CPF", "PWC", "EY"]);
+const SMALL = new Set(["AND", "THE", "OF", "FOR", "CO", "IN", "ON", "AT", "BY", "TO"]);
+function niceCo(name) {
+  if (!name) return "";
+  let n = name.replace(/[\s,]+(?:\(?(?:S(?:INGAPORE)?)\)?\s+)?(?:PTE\.?\s*LTD\.?|PTE\.?\s*LIMITED|PRIVATE LIMITED|LIMITED|LTD\.?|LLP|INC\.?)$/i, "").trim();
+  if (n !== n.toUpperCase() || !/[A-Z]/.test(n)) return n || name;
+  return n.split(/(\s+|-|\/|\()/).map((w, i) => {
+    if (!/[A-Z]/.test(w)) return w;
+    if ((KEEP_UPPER.test(w) || ACRONYMS.has(w)) && !SMALL.has(w)) return w;
+    if (SMALL.has(w) && i > 0) return w.toLowerCase();
+    return w[0] + w.slice(1).toLowerCase();
+  }).join("");
+}
+const AV_TONES = [["#e8eefc", "#2f5bb7"], ["#e5f4ec", "#1f7a46"], ["#fdeee2", "#a34d12"], ["#f1e9fb", "#6d3fb8"], ["#e3f2f4", "#16707c"], ["#fbe8ee", "#a8325a"], ["#eef0e3", "#5e6a16"], ["#ece9e4", "#5b5148"]];
+const AV_TONES_DARK = [["#22304b", "#a9c1f6"], ["#173225", "#7fd6a3"], ["#3a2716", "#f0aa72"], ["#2c2340", "#c3a6f3"], ["#15313a", "#7fd0db"], ["#3a1d29", "#f19ab8"], ["#2c2f17", "#c8d37b"], ["#2b2824", "#c9bfb4"]];
+const dark = matchMedia("(prefers-color-scheme: dark)");
+function themePref() { try { return localStorage.getItem("cw.theme") || "auto"; } catch { return "auto"; } }
+const isDark = () => { const t = document.documentElement.dataset.theme; return t ? t === "dark" : dark.matches; };
+function setTheme(t) {
+  try { localStorage.setItem("cw.theme", t); } catch {}
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme;
+  drawThemeButtons(); route();
+}
+function drawThemeButtons() {
+  const d = isDark();
+  fill($("#navTheme"), icon(d ? "sun" : "moon"), d ? "Light mode" : "Dark mode");
+  fill($("#mTheme"), icon(d ? "sun" : "moon", "sm"));
+  for (const b of $$("[data-theme-opt]")) b.setAttribute("aria-pressed", String(b.dataset.themeOpt === themePref()));
+}
+function avatar(company, size) {
+  const n = niceCo(company) || "?";
+  const words = n.replace(/[^A-Za-z0-9 &]/g, " ").split(/\s+/).filter(Boolean);
+  const ini = (words.length > 1 ? words[0][0] + words[1][0] : (words[0] || "?").slice(0, 2)).toUpperCase();
+  let hsh = 0; for (const c of n) hsh = (hsh * 31 + c.charCodeAt(0)) >>> 0;
+  const [bg, fg] = (isDark() ? AV_TONES_DARK : AV_TONES)[hsh % AV_TONES.length];
+  return h("div", { class: "av" + (size ? " " + size : ""), style: `background:${bg};color:${fg}`, "aria-hidden": "true" }, ini);
+}
+const VERDICT_ICON = { early: "bolt", good: "check", ghost: "ghost", mass: "megaphone", hype: "megaphone", crowded: "users" };
+function verdictPill(v) { return v ? h("span", { class: "pill " + v.key, title: v.why }, icon(VERDICT_ICON[v.key] || "check"), v.label) : null; }
+
+// ============================================================ state
+const state = { view: "home", params: new URLSearchParams(), meta: null, profile: null, jobs: [], total: 0, selected: null, viewed: new Set(), home: null };
+try { state.viewed = new Set(JSON.parse(localStorage.getItem("sgjobs.viewed") || "[]")); } catch {}
+function rememberViewed(id) { state.viewed.add(id); try { localStorage.setItem("sgjobs.viewed", JSON.stringify([...state.viewed].slice(-4000))); } catch {} }
+
+// ============================================================ job cards
+function jobCard(j, variant) {
+  const sal = salaryText(j);
+  const saved = !!j.status && j.status !== "hidden";
+  const meta = [
+    j.posted ? h("span", {}, postedText(j.posted)) : null,
+    j.applicants != null ? h("span", { class: "dot" }, `${nf.format(j.applicants)} applicant${j.applicants === 1 ? "" : "s"}`) : null,
+    j.agency ? h("span", { class: "dot" }, "Agency") : null,
+    j.mins != null ? h("span", { class: "dot", title: `About ${j.km} km from home (straight line). Rough public-transport estimate.` }, `~${j.mins} min away`) : null,
+  ].filter(Boolean);
+  if (meta[0]) meta[0].classList.remove("dot");
+  const pills = [
+    matchPill(j.match),
+    j.mode ? h("span", { class: "pill mode" }, j.mode) : null,
+    j.status && j.status !== "hidden" ? h("span", { class: "pill st-" + j.status }, ST_LABEL[j.status] || j.status) : null,
+    verdictPill(j.verdict),
+    j.is_new ? h("span", { class: "pill new" }, "New") : null,
+    j.exclusive ? h("span", { class: "pill excl", title: "Not listed on MyCareersFuture" }, j.sources.includes("Careers") ? "Company site only" : `Only on ${j.sources[0]}`) : null,
+  ].filter(Boolean);
+  const payEl = sal ? h("div", { class: "pay num" }, sal, h("small", {}, per(j))) : h("div", { class: "pay none" }, "Pay not shown");
+  const head = h("div", { class: "top" }, avatar(j.company), h("div", { class: "tt" },
+    h("div", { class: "title" }, j.title),
+    h("div", { class: "co", title: j.company }, [niceCo(j.company), j.location && !/^(Singapore|Islandwide)$/.test(j.location) ? j.location.replace(/^D\d+\s*/, "").split(",")[0] : null].filter(Boolean).join(" · ")),
+    variant === "row" ? h("div", { class: "meta" }, pills, meta) : null));
+  const saveBtn = h("button", { class: "save" + (saved ? " on" : ""), title: saved ? `In your tracker (${j.status})` : "Save to tracker", "aria-label": saved ? "Remove from tracker" : "Save to tracker", onclick: e => { e.stopPropagation(); quickSave(j); } }, icon("bookmark"));
+  const el = h("article", {
+    class: "jc" + (variant === "row" ? " row" : "") + (state.selected === j.id ? " sel" : "") + (state.viewed.has(j.id) ? " seen" : ""),
+    tabindex: "0", "data-id": j.id, onclick: () => openJob(j.id), onkeydown: e => { if (e.key === "Enter") openJob(j.id); },
+  }, head, variant === "row" ? h("div", { class: "side" }, payEl)
+    : [payEl, pills.length ? h("div", { class: "meta" }, pills) : null, meta.length ? h("div", { class: "meta" }, meta) : null], saveBtn);
+  return el;
+}
+function refreshCards(job) {
+  for (const el of $$(`.jc[data-id="${job.id}"]`)) {
+    const row = el.classList.contains("row");
+    const merged = { ...findJob(job.id), ...job };
+    el.replaceWith(jobCard(merged, row ? "row" : undefined));
+  }
+  const i = state.jobs.findIndex(x => x.id === job.id);
+  if (i >= 0) state.jobs[i] = { ...state.jobs[i], status: job.status };
+}
+function findJob(id) {
+  return state.jobs.find(x => x.id === id) || (state.home?.sections || []).flatMap(s => s.jobs).find(x => x.id === id) || {};
+}
+async function quickSave(j) {
+  const cur = findJob(j.id).status ?? j.status;
+  const next = cur && cur !== "hidden" ? null : "saved";
+  const d = await post(`/api/job/${j.id}/status`, { status: next });
+  for (const s of state.home?.sections || []) for (const x of s.jobs) if (x.id === j.id) x.status = d.status;
+  refreshCards(d);
+  if (state.selected === j.id) renderDrawer(d);
+  toast(next ? "Saved to your tracker" : "Removed from tracker", next ? { label: "View tracker", fn: () => go("tracker") } : null);
+  refreshMeta();
+}
+
+// ============================================================ charts (single series: one hue, thin marks, hover tooltips)
+function barPath(x, y, w, hgt, r) {  // rounded top (data end), square at the baseline
+  r = Math.min(r, w / 2, hgt);
+  return `M${x},${y + hgt}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + hgt}Z`;
+}
+function histogram(stats, { width = 720, height = 240, mini = false, mark = null } = {}) {
+  const bins = stats.bins || [];
+  const padL = mini ? 0 : 8, padB = mini ? 2 : 28, padT = mini ? 2 : 22;
+  const W = width - padL * 2, H = height - padB - padT;
+  const max = Math.max(...bins.map(b => b.n), 1);
+  const lo = bins[0].lo, hi = bins[bins.length - 1].hi;
+  const X = v => padL + (Math.min(Math.max(v, lo), hi) - lo) / (hi - lo) * W;
+  const bw = W / bins.length;
+  const svg = S("svg", { class: mini ? "" : "hist", viewBox: `0 0 ${width} ${height}`, role: "img", "aria-label": `Pay distribution: median ${money(stats.p50)}, middle half ${money(stats.p25)} to ${money(stats.p75)}` });
+  if (!mini) {
+    svg.append(S("rect", { x: X(stats.p25), y: padT - 6, width: Math.max(2, X(stats.p75) - X(stats.p25)), height: H + 6, fill: "var(--series-soft)", rx: 6, opacity: .7 }));
+    svg.append(S("text", { x: (X(stats.p25) + X(stats.p75)) / 2, y: padT - 10, "text-anchor": "middle", "font-size": 11.5, fill: "var(--ink-3)", "font-weight": 600 }, "Middle half of jobs"));
+  }
+  bins.forEach((b, i) => {
+    const bh = b.n ? Math.max(2, b.n / max * H) : 0;
+    const x = padL + i * bw + 1, w = Math.max(1, bw - 2);
+    const inMark = mark && b.hi > mark[0] && b.lo < mark[1];
+    if (bh) svg.append(S("path", { d: barPath(x, padT + H - bh, w, bh, mini ? 2 : 4), fill: inMark ? "var(--accent)" : "var(--series)", opacity: mini && !inMark ? .85 : 1 }));
+    if (!mini) {
+      const hit = S("rect", { x: padL + i * bw, y: padT, width: bw, height: H, fill: "transparent", "data-tip": `${money(b.lo)}–${money(b.hi)} a month: ${nf.format(b.n)} job${b.n === 1 ? "" : "s"}` });
+      svg.append(hit);
+    }
+  });
+  if (!mini) {
+    svg.append(S("line", { x1: padL, x2: padL + W, y1: padT + H + .5, y2: padT + H + .5, stroke: "var(--line-2)" }));
+    const mx = X(stats.p50);
+    svg.append(S("line", { x1: mx, x2: mx, y1: padT - 2, y2: padT + H, stroke: "var(--ink)", "stroke-width": 1.5, "stroke-dasharray": "3 3" }));
+    svg.append(S("text", { x: mx + 5, y: padT + 10, "font-size": 12, fill: "var(--ink)", "font-weight": 700 }, `Median ${money(stats.p50)}`));
+    const every = Math.ceil(bins.length / 7);  // label bar edges (round numbers), at most ~8 labels
+    for (let i = 0; i <= bins.length; i += every) {
+      const v = i < bins.length ? bins[i].lo : hi;
+      svg.append(S("text", { x: X(v), y: padT + H + 18, "text-anchor": i === 0 ? "start" : "middle", "font-size": 11.5, fill: "var(--ink-3)" }, "$" + kfmt(v)));
+    }
+  }
+  return svg;
+}
+function withTips(container) {  // one tooltip per chart card, driven by data-tip on hit targets
+  const tip = h("div", { class: "tip", role: "tooltip" });
+  container.append(tip);
+  container.addEventListener("mousemove", e => {
+    const t = e.target.closest("[data-tip]");
+    if (!t) return tip.classList.remove("on");
+    const r = container.getBoundingClientRect(), b = t.getBoundingClientRect();
+    tip.textContent = t.dataset.tip;
+    tip.style.left = (b.left + b.width / 2 - r.left) + "px";
+    tip.style.top = (b.top - r.top + (t.dataset.tipY ? +t.dataset.tipY : 18)) + "px";
+    tip.classList.add("on");
+  });
+  container.addEventListener("mouseleave", () => tip.classList.remove("on"));
+  return container;
+}
+function rangeBar(row, lo, hi) {  // p25–p75 bar with a median dot, on a shared scale
+  const X = v => (v - lo) / (hi - lo) * 100;
+  return S("svg", { viewBox: "0 0 100 18", preserveAspectRatio: "none", "aria-hidden": "true" },
+    S("rect", { x: 0, y: 8, width: 100, height: 2, fill: "var(--line)", rx: 1 }),
+    S("rect", { x: X(row.p25), y: 4, width: Math.max(1.5, X(row.p75) - X(row.p25)), height: 10, rx: 3, fill: "var(--series)", opacity: .35 }),
+    S("rect", { x: X(row.p50) - .9, y: 2, width: 1.8, height: 14, rx: .9, fill: "var(--series-ink)" }));
+}
+function marketBar(m, job) {  // where this job's range sits against similar jobs
+  const lo = Math.min(m.p10, job.salary_min || job.salary_max) * .95, hi = Math.max(m.p90, job.salary_max) * 1.03;
+  const W = 480, X = v => 8 + (v - lo) / (hi - lo) * (W - 16);
+  const jlo = job.salary_min || job.salary_max, jhi = job.salary_max;
+  return S("svg", { viewBox: `0 0 ${W} 64`, role: "img", "aria-label": `Similar jobs pay ${money(m.p25)} to ${money(m.p75)}. This job pays ${money(jlo)} to ${money(jhi)}.` },
+    S("rect", { x: X(m.p10), y: 30, width: X(m.p90) - X(m.p10), height: 4, rx: 2, fill: "var(--line-2)" }),
+    S("rect", { x: X(m.p25), y: 24, width: Math.max(3, X(m.p75) - X(m.p25)), height: 16, rx: 5, fill: "var(--series-soft)", stroke: "var(--series)", "stroke-width": 1 }),
+    S("rect", { x: X(m.p50) - 1, y: 22, width: 2, height: 20, fill: "var(--series-ink)" }),
+    S("rect", { x: X(jlo), y: 29, width: Math.max(6, X(jhi) - X(jlo)), height: 6, rx: 3, fill: "var(--accent)", stroke: "var(--panel)", "stroke-width": 2 }),
+    S("text", { x: (X(jlo) + X(jhi)) / 2, y: 14, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: "var(--accent-2)" }, "This job"),
+    S("text", { x: X(m.p25), y: 58, "text-anchor": "middle", "font-size": 11.5, fill: "var(--ink-3)" }, "$" + kfmt(m.p25)),
+    S("text", { x: X(m.p75), y: 58, "text-anchor": "middle", "font-size": 11.5, fill: "var(--ink-3)" }, "$" + kfmt(m.p75)),
+    S("text", { x: X(m.p50), y: 58, "text-anchor": "middle", "font-size": 11.5, fill: "var(--ink)", "font-weight": 650 }, "$" + kfmt(m.p50)));
+}
+
+// ============================================================ HOME
+function greeting() { const hr = new Date().getHours(); return hr < 12 ? "Good morning" : hr < 18 ? "Good afternoon" : "Good evening"; }
+const SEC_STYLE = { cv: ["file", "var(--early-bg)", "var(--early)"], best: ["sparkle", "var(--early-bg)", "var(--early)"], early: ["bolt", "var(--early-bg)", "var(--early)"], exclusive: ["building", "var(--series-soft)", "var(--series-ink)"], pay: ["coin", "var(--warn-bg)", "var(--warn)"], closing: ["clock", "var(--bad-bg)", "var(--bad)"] };
+async function loadHome(force) {
+  if (state.meta && !state.meta.active) { renderFirstRun(); return; }
+  if (!state.profile?.setup_done) { renderHomeEmpty(); return; }
+  $("#homeTitle").textContent = greeting();
+  if (!state.home || force) {
+    fill($("#kpis"), ...Array.from({ length: 4 }, () => h("div", { class: "skel", style: "min-height:110px" })));
+    fill($("#sections"), h("div", { class: "grid3" }, Array.from({ length: 3 }, () => h("div", { class: "skel" }))));
+    try { state.home = await api("/api/home"); } catch (e) { fill($("#sections"), h("div", { class: "empty" }, h("h3", {}, "Couldn't load your jobs"), e.message)); return; }
+  }
+  renderHome(state.home);
+}
+function renderFirstRun() {
+  const running = state.meta?.fetch?.running;
+  $("#homeTitle").textContent = "Welcome to ChiongWork";
+  fill($("#homeRoles"), h("span", { class: "muted" }, "Every Singapore job site in one feed, with the noise filtered out."));
+  $("#kpis").replaceChildren(); $("#shield").replaceChildren(); $("#promo").replaceChildren();
+  fill($("#sections"), h("div", { class: "empty" },
+    h("h3", {}, running ? "Getting your first jobs…" : "First, let's get some jobs"),
+    h("p", {}, running ? "Pulling the newest jobs from MyCareersFuture and company career pages. This takes about 2 minutes, and the page fills in by itself."
+      : "ChiongWork keeps its own copy of the job listings on this computer. The first download takes about 2 minutes."),
+    running ? h("div", { class: "bar", style: "height:3px;border-radius:3px;background:var(--line);overflow:hidden;max-width:320px;margin:14px auto 0" }, h("i", { style: "display:block;height:100%;width:35%;background:var(--accent);animation:indet 1.2s ease-in-out infinite" }))
+      : h("button", { class: "btn primary", style: "margin-top:8px", onclick: () => startFetch(false) }, icon("refresh", "sm"), "Get jobs now")));
+}
+function renderHomeEmpty() {
+  $("#homeTitle").textContent = "Welcome to ChiongWork";
+  fill($("#homeRoles"), h("span", { class: "muted" }, "Tell us what you're looking for, and this page fills with your best matches."));
+  $("#kpis").replaceChildren(); $("#shield").replaceChildren();
+  fill($("#sections"), h("div", { class: "empty" }, h("h3", {}, "Let's set up your feed"),
+    h("p", {}, "Pick a few roles and your minimum pay. It takes 20 seconds."), h("button", { class: "btn primary", onclick: () => showOnboarding() }, "Get started")));
+}
+function renderHome(d) {
+  const p = d.profile, c = d.counts;
+  fill($("#homeRoles"), h("span", { class: "muted", style: "margin-right:4px" }, "Your feed for"),
+    ...(p.roles.length ? p.roles.map(r => h("span", { class: "rolechip" }, r)) : [h("span", { class: "rolechip" }, "all jobs")]),
+    p.min_pay ? h("span", { class: "muted" }, ` · $${kfmt(p.min_pay)}+ a month`) : null);
+  const t = c.tracker || {};
+  const pay = d.pay && d.pay.n >= 5 ? d.pay : null;
+  const kpi = (lbl, ico, val, sub, onclick, extra) => h("button", { class: "kpi", onclick }, h("span", { class: "lbl" }, icon(ico, "sm"), lbl), h("span", { class: "val num" }, val), h("span", { class: "sub" }, sub), extra);
+  fill($("#kpis"), 
+    kpi("New since last refresh", "sparkle", nf.format(c.new), c.new ? "Jobs that just appeared for you" : "Nothing new yet. Try refreshing", () => go("search", { mine: 1, new: 1 })),
+    kpi("Jobs that match you", "search", nf.format(c.matches), "With ghost jobs and hype ads removed", () => go("search", { mine: 1, sort: "best" })),
+    pay ? kpi(`Typical pay · ${pay.role}`, "coin", money(pay.p50), `Most pay ${money(pay.p25)} – ${money(pay.p75)}`, () => go("pay", { role: pay.role }), histogram(pay, { width: 220, height: 30, mini: true }))
+        : kpi("Typical pay", "coin", "—", "Add a role to see market pay", () => go("pay")),
+    kpi("Your applications", "board", nf.format((t.applied || 0) + (t.interview || 0) + (t.offer || 0)), `${t.saved || 0} saved · ${t.interview || 0} interviewing`, () => go("tracker")),
+  );
+  for (const k of $$(".kpi svg:not(.i)")) k.classList.add("spark");
+  const hidden = c.ghost + c.mass;
+  fill($("#shield"), hidden ? h("div", { class: "shield" }, h("span", { class: "ico" }, icon("shield")),
+    h("span", {}, "We kept ", h("b", {}, `${nf.format(c.ghost)} likely ghost job${c.ghost === 1 ? "" : "s"}`), " and ", h("b", {}, `${nf.format(c.mass)} mass-hiring or hype ad${c.mass === 1 ? "" : "s"}`), " out of your feed."),
+    h("button", { class: "linkbtn", onclick: () => go("search", { roles: p.roles.join("|") }) }, "See everything", icon("arrow", "sm"))) : "");
+  const gm = state.meta?.gmail;
+  fill($("#promo"), !state.meta?.cv ? h("div", { class: "promo" }, icon("file"),
+    h("span", {}, h("b", {}, "See your match score on every job. "), "Upload your CV and ChiongWork ranks jobs by how well your skills fit, and shows what's missing."),
+    h("button", { class: "btn sm primary", onclick: () => go("cv") }, "Add my CV")) : gm && !gm.connected ? h("div", { class: "promo" }, icon("mail"),
+    h("span", {}, h("b", {}, "Add LinkedIn, JobStreet & Indeed jobs. "), "Connect your Gmail and the job alerts they send you show up here, merged with MyCareersFuture."),
+    h("button", { class: "btn sm primary", onclick: () => go("import") }, "Connect Gmail")) : "");
+  fill($("#sections"), ...d.sections.map(s => {
+    const [ico, bg, fg] = SEC_STYLE[s.key] || ["sparkle", "var(--sunk)", "var(--ink)"];
+    return h("section", { class: "sec" },
+      h("div", { class: "sec-h" }, h("div", {}, h("h2", {}, h("span", { class: "ico", style: `background:${bg};color:${fg}` }, icon(ico, "sm")), s.title), h("p", {}, s.sub)),
+        s.total > s.jobs.length ? h("button", { class: "linkbtn", onclick: () => go("search", s.link) }, `See all ${nf.format(s.total)}`, icon("arrow", "sm")) : null),
+      s.jobs.length ? h("div", { class: "grid3" }, s.jobs.map(j => jobCard(j))) : h("div", { class: "sec-empty" }, "Nothing here right now. Check back after the next refresh."));
+  }));
+}
+
+// ============================================================ SEARCH
+const QUICK = [
+  { id: "cvmatch", label: "Strong CV match", icon: "file", needsCv: true, on: p => p.get("min_match") === String(MT.strong), set: (p, v) => { if (v) { p.set("min_match", MT.strong); p.set("sort", "match"); } else { p.delete("min_match"); if (p.get("sort") === "match") p.delete("sort"); } } },
+  { id: "mine", label: "Matches my profile", on: p => p.get("mine") === "1", set: (p, v) => v ? p.set("mine", "1") : p.delete("mine"), needsProfile: true },
+  { id: "best", label: "Best bets", icon: "sparkle", on: p => p.get("sort") === "best" && p.get("days") === "14", set: (p, v) => { if (v) { p.set("sort", "best"); p.set("days", "14"); } else { p.delete("days"); p.set("sort", "date"); } } },
+  { id: "early", label: "Apply early", icon: "bolt", on: p => p.get("early") === "1", set: (p, v) => v ? p.set("early", "1") : p.delete("early") },
+  { id: "exclusive", label: "Not on MyCareersFuture", icon: "building", on: p => p.get("exclusive") === "1", set: (p, v) => v ? p.set("exclusive", "1") : p.delete("exclusive") },
+  { id: "closing", label: "Closing this week", icon: "clock", on: p => p.get("closing") === "7", set: (p, v) => { if (v) { p.set("closing", "7"); p.set("sort", "closing"); } else { p.delete("closing"); if (p.get("sort") === "closing") p.delete("sort"); } } },
+  { id: "direct", label: "Direct employers", icon: "building", on: p => p.get("direct") === "1", set: (p, v) => v ? p.set("direct", "1") : p.delete("direct") },
+  { id: "clean", label: "Hide ghost jobs & hype ads", icon: "shield", on: p => p.get("no_ghost") === "1", set: (p, v) => { if (v) { p.set("no_ghost", "1"); p.set("no_copies", "1"); } else { p.delete("no_ghost"); p.delete("no_copies"); } } },
+  { id: "new", label: "New since refresh", icon: "sparkle", on: p => p.get("new") === "1", set: (p, v) => v ? p.set("new", "1") : p.delete("new") },
+];
+const SELECTS = ["min_salary", "days", "max_min", "max_applicants", "type", "level", "source", "sort"];
+function setSearchParams(p, { push = false } = {}) {
+  state.params = p;
+  const hsh = "#search" + (p.toString() ? "?" + p : "");
+  if (push) location.hash = hsh; else { history.replaceState(null, "", hsh); runSearch(); }
+}
+function syncSearchControls() {
+  const p = state.params;
+  if (document.activeElement !== $("#q")) $("#q").value = p.get("q") || "";
+  for (const id of SELECTS) {
+    const el = $("#f-" + id), v = p.get(id) || (id === "sort" ? "date" : "");
+    if (v && ![...el.options].some(o => o.value === v)) el.append(h("option", { value: v }, v));
+    el.value = v;
+    el.classList.toggle("set", id !== "sort" && !!v);
+  }
+  fill($("#quick"), ...QUICK.filter(q => (!q.needsProfile || state.profile?.roles?.length) && (!q.needsCv || state.meta?.cv)).map(q =>
+    h("button", { class: "chip", "aria-pressed": String(q.on(p)), onclick: () => { const np = new URLSearchParams(p); np.delete("offset"); q.set(np, !q.on(p)); setSearchParams(np); } },
+      q.icon ? icon(q.icon, "sm") : null, q.id === "mine" ? `For me: ${state.profile.roles.slice(0, 2).join(", ")}${state.profile.roles.length > 2 ? "…" : ""}` : q.label)));
+  const noHome = !state.meta?.home;
+  $("#f-max_min").disabled = noHome;
+  $("#f-max_min").title = noHome ? "Add your home postal code in Settings to filter by commute" : "";
+  const active = [...p.keys()].filter(k => !["sort", "job"].includes(k)).length;
+  $("#clearFilters").hidden = !active;
+}
+let searchSeq = 0;
+async function runSearch(append = false) {
+  syncSearchControls();
+  if (state.meta && !state.meta.active) {
+    fill($("#list"), h("div", { class: "empty" }, h("h3", {}, "No jobs downloaded yet"), "Go to For you and click Get jobs now. The first download takes about 2 minutes."));
+    $("#resultCount").textContent = ""; $("#more").hidden = true; $("#paystrip").replaceChildren();
+    return;
+  }
+  const seq = ++searchSeq;
+  const p = new URLSearchParams(state.params);
+  p.delete("job");
+  if (!p.get("sort")) p.set("sort", "date");
+  p.set("limit", 30);
+  p.set("offset", append ? state.jobs.length : 0);
+  if (!append) { fill($("#list"), ...Array.from({ length: 5 }, () => h("div", { class: "skel", style: "min-height:84px" }))); $("#more").hidden = true; }
+  try {
+    const data = await api("/api/search?" + p);
+    if (seq !== searchSeq) return;
+    state.total = data.total;
+    state.jobs = append ? state.jobs.concat(data.jobs) : data.jobs;
+    if (!append) renderPayStrip(data.pay);
+    renderResults(append ? data.jobs : null);
+  } catch (e) { if (seq === searchSeq) fill($("#list"), h("div", { class: "empty" }, h("h3", {}, "Couldn't load jobs"), e.message)); }
+}
+function renderPayStrip(pay) {
+  const q = state.params.get("q") || "";
+  if (!pay || pay.n < 8 || !pay.bins) return $("#paystrip").replaceChildren();
+  fill($("#paystrip"), h("div", { class: "paystrip", role: "button", tabindex: "0", title: "Open the full pay breakdown", onclick: () => go("pay", q ? { role: q } : {}) },
+    h("span", { class: "ico", style: "color:var(--series)" }, icon("coin", "lg")),
+    h("div", { class: "t" }, "Typical pay for these jobs: ", h("b", { class: "num" }, `${money(pay.p25)} – ${money(pay.p75)}`), " a month (median ", h("b", { class: "num" }, money(pay.p50)), `). Based on ${nf.format(pay.n)} jobs that show pay.`),
+    histogram(pay, { width: 150, height: 34, mini: true })));
+}
+function renderResults(appended) {
+  const list = $("#list");
+  const q = state.params.get("q");
+  fill($("#resultCount"), h("b", { class: "num" }, nf.format(state.total)), state.total === 1 ? " job" : " jobs", q ? ` for “${q}”` : "");
+  if (!appended) {
+    if (!state.jobs.length) fill(list, h("div", { class: "empty" }, h("h3", {}, "No jobs match"), h("p", {}, "Try a shorter search, or remove a filter."), h("button", { class: "btn", onclick: () => setSearchParams(new URLSearchParams(q ? { q } : {})) }, "Clear filters")));
+    else fill(list, ...state.jobs.map(j => jobCard(j, "row")));
+  } else list.append(...appended.map(j => jobCard(j, "row")));
+  $("#more").hidden = state.jobs.length >= state.total;
+  $("#more").textContent = `Show more jobs (${nf.format(state.total - state.jobs.length)} more)`;
+}
+
+// ============================================================ DRAWER
+async function openJob(id) {
+  state.selected = id; state.appOpen = null;
+  rememberViewed(id);
+  for (const el of $$(".jc")) { el.classList.toggle("sel", +el.dataset.id === id); if (+el.dataset.id === id) el.classList.add("seen"); }
+  const p = new URLSearchParams(location.hash.split("?")[1] || ""); p.set("job", id);
+  history.replaceState(null, "", "#" + state.view + "?" + p);
+  const dr = $("#drawer");
+  dr.classList.add("open"); dr.setAttribute("aria-hidden", "false");
+  $("#scrim").classList.add("on");
+  document.body.classList.toggle("docked", state.view === "search");
+  fill(dr, h("div", { class: "d-sec muted" }, "Loading…"));
+  try { renderDrawer(await api(`/api/job/${id}`)); } catch (e) { fill(dr, h("div", { class: "d-sec" }, e.message)); }
+}
+function closeDrawer() {
+  if (!$("#drawer").classList.contains("open")) return;
+  state.selected = null; state.appOpen = null;
+  if (state.trkDirty) { state.trkDirty = false; if (state.view === "tracker") loadTracker(); }
+  $("#drawer").classList.remove("open"); $("#drawer").setAttribute("aria-hidden", "true");
+  $("#scrim").classList.remove("on"); document.body.classList.remove("docked");
+  for (const el of $$(".jc.sel")) el.classList.remove("sel");
+  const p = new URLSearchParams(location.hash.split("?")[1] || ""); p.delete("job");
+  history.replaceState(null, "", "#" + state.view + (p.toString() ? "?" + p : ""));
+}
+function renderDrawer(d) {
+  const dr = $("#drawer");
+  const sal = salaryText(d);
+  const best = d.listings.find(l => !l.closed && safeUrl(l.url));
+  const applyLabel = !best ? null : best.raw_source === "mcf" ? "Apply on MyCareersFuture" : best.source === "Careers" ? "Apply on company site" : `Open on ${best.source}`;
+  const saved = d.status && d.status !== "hidden";
+  const statusBtns = ["saved", "applied", "interview", "offer", "rejected"].map(s => h("button", { "data-s": s, "aria-pressed": String(d.status === s), onclick: () => setStatus(d, d.status === s ? null : s) }, ST_LABEL[s]));
+  statusBtns.push(h("button", { class: "hide", "aria-pressed": String(d.status === "hidden"), title: "Hide this job everywhere", onclick: () => setStatus(d, d.status === "hidden" ? null : "hidden") }, "Not interested"));
+  const note = h("textarea", { class: "note", placeholder: "Notes: who referred you, interview questions, when to follow up…", "aria-label": "Notes" }, d.note || "");
+  let noteTimer;
+  note.addEventListener("input", () => {
+    clearTimeout(noteTimer);
+    noteTimer = setTimeout(async () => {
+      const r = await post(`/api/job/${d.id}/status`, { status: d.status || "saved", note: note.value });
+      if (!d.status) { d.status = r.status; refreshCards(r); refreshMeta(); for (const b of $$(".seg button", dr)) b.setAttribute("aria-pressed", String(b.dataset.s === r.status)); }
+      toast("Note saved");
+    }, 700);
+  });
+  const desc = d.description ? h("div", { class: "desc" + (d.description.length > 900 ? " clamp" : "") }, d.description) : null;
+  const m = d.market;
+  const legal = niceCo(d.company).toLowerCase() !== (d.company || "").toLowerCase() ? d.company : null;
+  fill(dr, 
+    h("div", { class: "d-head" },
+      h("div", { class: "row1" }, avatar(d.company, "lg"), h("div", { style: "min-width:0" }, h("h2", {}, d.title), h("div", { class: "co" }, niceCo(d.company), d.location ? ` · ${d.location}` : ""), legal ? h("div", { class: "legal" }, legal) : null),
+        h("button", { class: "btn ghost sm d-close", onclick: closeDrawer, "aria-label": "Close", title: "Close (Esc)" }, icon("x"))),
+      h("div", { class: "d-pay" }, sal ? [h("span", { class: "big num" }, sal), h("small", {}, d.salary_period === "hour" ? "per hour" : "per month")] : h("span", { class: "muted" }, "Pay not shown on any site"),
+        d.salary_from_mcf ? h("small", {}, "· pay from MyCareersFuture") : null),
+      h("div", { class: "d-actions" },
+        best ? h("a", { class: "btn primary", href: safeUrl(best.url), target: "_blank", rel: "noopener noreferrer", onclick: () => applyClicked(d.id, d.title, d.company) }, applyLabel, icon("ext", "sm")) : null,
+        h("button", { class: "btn", onclick: () => setStatus(d, saved ? null : "saved") }, icon("bookmark", "sm"), saved ? "In tracker" : "Save"))),
+    d.verdict ? h("div", { class: "d-sec" }, h("div", { class: "callout " + d.verdict.key }, icon(VERDICT_ICON[d.verdict.key] || "check"), h("div", {}, h("b", {}, d.verdict.label), h("span", {}, d.verdict.why)))) : null,
+    matchSection(d),
+    commuteSection(d),
+    m ? h("div", { class: "d-sec" }, h("h4", {}, "Pay vs similar jobs"), h("div", { class: "mk" }, marketBar(m, d),
+      h("div", { class: "cap" }, `Most of the ${nf.format(m.n)} “${m.key}” jobs with pay shown advertise ${money(m.p25)}–${money(m.p75)}. This one is `,
+        h("b", {}, { above: "above that range", typical: "within that range", below: "below that range" }[m.position]), ". ",
+        h("button", { class: "linkbtn", onclick: () => { closeDrawer(); go("pay", { role: m.key }); } }, "Full breakdown", icon("arrow", "sm"))))) : null,
+    d.points.length ? h("div", { class: "d-sec" }, h("h4", {}, "What to know"), h("ul", { class: "pts" }, d.points.map(pt => h("li", {}, h("span", { class: pt.good ? "ok" : "no" }, icon(pt.good ? "check" : "alert")), pt.text)))) : null,
+    h("div", { class: "d-sec" }, h("h4", {}, "Track it"), h("div", { class: "seg" }, statusBtns),
+      d.app ? h("div", { class: "help", style: "margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap" }, stPill(d.app), d.app.applied_at ? `Applied ${fmtDate(d.app.applied_at)}` : `Saved ${fmtDate(d.app.created)}`,
+        h("button", { class: "linkbtn", onclick: () => openApp(d.app.id) }, "Open in tracker: timeline, interviews, follow-ups", icon("arrow", "sm"))) : null, note),
+    h("div", { class: "d-sec where" }, h("h4", {}, `Listed on ${d.listings.length} site${d.listings.length === 1 ? "" : "s"}`),
+      d.listings.map(l => {
+        const name = l.raw_source === "mcf" ? "MyCareersFuture" : l.source === "Careers" ? `${niceCo(d.company)} careers page` : l.source;
+        const url = safeUrl(l.url);
+        return h(url ? "a" : "div", { href: url, target: "_blank", rel: "noopener noreferrer", class: l.closed ? "closed" : null },
+          icon(l.source === "Careers" ? "building" : l.raw_source === "mcf" ? "search" : "mail"),
+          h("span", {}, h("span", { class: "nm" }, name), h("small", {}, l.closed ? "Closed" : `In your feed since ${fmtDate(l.first_seen)}`)), h("span", { class: "go" }, icon("ext", "sm")));
+      })),
+    h("div", { class: "d-sec" }, h("h4", {}, "Details"), h("div", { class: "kvs" },
+      [["Job type", d.employment_type], ["Level", d.level], ["Experience", d.min_experience != null ? `${d.min_experience}+ years` : null], ["Category", d.category],
+       ["Applicants", d.applicants != null ? nf.format(d.applicants) : null], ["Views", d.views != null ? nf.format(d.views) : null],
+       ["First posted", d.original_posted ? fmtDate(d.original_posted) : d.posted ? fmtDate(d.posted) : null], ["Closes", d.expiry ? fmtDate(d.expiry) : null]]
+        .filter(([, v]) => v).map(([k, v]) => h("div", { class: "kv" }, h("small", {}, k), h("span", {}, v))))),
+    d.skills ? h("div", { class: "d-sec" }, h("h4", {}, "Skills they mention"), h("div", { class: "tags" }, d.skills.split(",").map(s => s.trim()).filter(Boolean).map(s => h("span", { class: "tag" }, s)))) : null,
+    desc ? h("div", { class: "d-sec" }, h("h4", {}, "Job description"), desc, desc.classList.contains("clamp") ? h("button", { class: "linkbtn", style: "margin-top:10px", onclick: e => { desc.classList.remove("clamp"); e.currentTarget.remove(); } }, "Read the full description") : null)
+      : h("div", { class: "d-sec muted" }, "The full description is on the original listing."),
+  );
+  dr.scrollTop = 0;
+}
+async function setStatus(d, status) {
+  const r = await post(`/api/job/${d.id}/status`, { status });
+  for (const s of state.home?.sections || []) for (const x of s.jobs) if (x.id === d.id) x.status = r.status;
+  refreshCards(r); renderDrawer(r); refreshMeta();
+  if (status === "hidden") toast("Hidden. You won't see this job again", { label: "Undo", fn: () => setStatus(r, null) });
+  else toast(status ? `Moved to ${ST_LABEL[status]}` : "Removed from tracker");
+}
+
+// ============================================================ MARKET PAY
+async function loadPay() {
+  const role = state.params.get("role") || state.profile?.roles?.[0] || "";
+  $("#payRole").value = role;
+  fill($("#payRoles"), ...(state.profile?.roles || []).map(r => h("button", { class: "chip", "aria-pressed": String(r.toLowerCase() === role.toLowerCase()), onclick: () => go("pay", { role: r }) }, r)));
+  if (!role) { fill($("#payBody"), h("div", { class: "empty", style: "margin-top:18px" }, h("h3", {}, "Type a role to see what it pays"), "For example: accountant, software engineer, admin assistant.")); return; }
+  fill($("#payBody"), h("div", { class: "skel", style: "min-height:300px;margin-top:18px" }));
+  const s = await api("/api/pay?" + new URLSearchParams({ role }));
+  if (!s.bins) { fill($("#payBody"), h("div", { class: "empty", style: "margin-top:18px" }, h("h3", {}, `Not enough “${role}” jobs with pay shown`), `Found ${s.n || 0}. Try a broader word, like “analyst” instead of “data quality analyst”.`)); return; }
+  const stat = (lbl, val, sub) => h("div", { class: "bigstat" }, h("div", { class: "lbl" }, lbl), h("div", { class: "val num" }, val), h("div", { class: "sub" }, sub));
+  const hist = withTips(h("div", { class: "chartcard" }, h("h3", {}, `Monthly pay for “${role}” jobs`), h("p", { class: "hint" }, `Each bar counts jobs by the middle of their advertised range. ${nf.format(s.n)} jobs show pay. Hover a bar for exact numbers.`), histogram(s),
+    h("details", { class: "tbl" }, h("summary", {}, "Show as a table"), h("table", { class: "t" }, h("thead", {}, h("tr", {}, h("th", {}, "Monthly pay"), h("th", { class: "r" }, "Jobs"))), h("tbody", {}, s.bins.filter(b => b.n).map(b => h("tr", {}, h("td", { class: "num" }, `${money(b.lo)} – ${money(b.hi)}`), h("td", { class: "r num" }, nf.format(b.n)))))))));
+  const lv = s.by_level || [];
+  const lo = Math.min(...lv.map(x => x.p25), s.p25) * .9, hi = Math.max(...lv.map(x => x.p75), s.p75) * 1.05;
+  const levels = h("div", { class: "chartcard" }, h("h3", {}, "By seniority"), h("p", { class: "hint" }, "Bar = middle half of jobs at that level, line = median."),
+    lv.length ? lv.map(x => h("div", { class: "lvl", title: `${x.level}: ${money(x.p25)}–${money(x.p75)}, median ${money(x.p50)} (${x.n} jobs)` }, h("span", { class: "nm" }, x.level, " ", h("small", {}, `(${x.n})`)), rangeBar(x, lo, hi), h("span", { class: "v num" }, "$" + kfmt(x.p50)))) : h("p", { class: "muted" }, "Not enough jobs per level yet."));
+  const hiring = h("div", { class: "chartcard" }, h("h3", {}, "Who's hiring the most"), h("p", { class: "hint" }, "Direct employers only, with their typical advertised pay."),
+    h("table", { class: "t" }, h("thead", {}, h("tr", {}, h("th", {}, "Company"), h("th", { class: "r" }, "Open roles"), h("th", { class: "r" }, "Typical pay"))),
+      h("tbody", {}, (s.most_hiring || []).map(c => h("tr", {}, h("td", {}, h("div", { style: "display:flex;gap:9px;align-items:center" }, avatar(c.company, "sm"), niceCo(c.company))), h("td", { class: "r num" }, c.n), h("td", { class: "r num" }, money(c.p50)))))));
+  fill($("#payBody"), 
+    h("div", { class: "bigstats" },
+      stat("Median pay", money(s.p50), "per month, half earn more"),
+      stat("Most jobs pay", `$${kfmt(s.p25)}–${kfmt(s.p75)}`, "the middle half of offers"),
+      stat("Top 10% pay", `${money(s.p90)}+`, "worth aiming for with experience"),
+      stat("Competition", s.median_applicants != null ? `${s.median_applicants} applicants` : "—", `typical job · ${s.agency_share}% via agencies`)),
+    hist, h("div", { class: "two" }, levels, hiring),
+    h("div", { style: "margin-top:6px" }, h("button", { class: "btn primary", onclick: () => go("search", { q: role, sort: "salary", no_copies: 1 }) }, `See all ${nf.format(s.total)} “${role}” jobs`, icon("arrow", "sm"))));
+}
+
+// ============================================================ TRACKER
+const STAGES = [
+  { key: "saved", label: "Saved", color: "var(--ink-3)", hint: "Jobs you bookmark land here. Click Apply on one and ChiongWork asks if you applied." },
+  { key: "applied", label: "Applied", color: "var(--series)", hint: "Applications waiting for a reply. You'll get a follow-up nudge after 7 days." },
+  { key: "interview", label: "Interviewing", color: "var(--status)", hint: "Add interview dates to any application and they show up here." },
+  { key: "offer", label: "Offer", color: "var(--early)", hint: "Offers go here. Record the pay offered to compare." },
+  { key: "closed", label: "Closed", color: "var(--bad)", hint: "Rejected, no reply or withdrawn. Moved here automatically after 30 days without news." },
+];
+const ST_LABEL = { saved: "Saved", applied: "Applied", interview: "Interviewing", offer: "Offer", rejected: "Rejected", no_reply: "No reply", withdrawn: "Withdrawn" };
+const CLOSED_ST = new Set(["rejected", "no_reply", "withdrawn"]);
+const stageOf = s => CLOSED_ST.has(s) ? "closed" : s;
+const fmtDT = at => new Date(at).toLocaleString("en-SG", { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+const daysSince = iso => iso ? Math.max(0, Math.floor((Date.now() - new Date(iso.slice(0, 10) + "T00:00:00")) / 864e5)) : null;
+const dayWord = n => n === 0 ? "today" : n === 1 ? "yesterday" : `${n} days ago`;
+function stPill(a) { return h("span", { class: "pill st-" + a.status }, ST_LABEL[a.status] || a.status); }
+function trkView() { try { return localStorage.getItem("cw.trackerView") || "board"; } catch { return "board"; } }
+
+async function loadTracker() {
+  if (!state.trk) fill($("#trkBody"), h("div", { class: "skel", style: "min-height:260px" }));
+  state.trk = await api("/api/tracker");
+  renderTracker();
+}
+function renderTracker() {
+  const d = state.trk, view = trkView();
+  for (const b of $$("#trkViews button")) b.setAttribute("aria-pressed", String(b.dataset.v === view));
+  $("#navTracked").hidden = !d.apps.length; $("#navTracked").textContent = d.apps.length;
+  fill($("#trkAttn"), attentionCards(d.attention));
+  fill($("#trkStats"), d.stats.applied ? trackerStats(d.stats) : "");
+  if (!d.apps.length) {
+    fill($("#trkBody"), h("div", { class: "empty" }, h("h3", {}, "No applications yet"),
+      h("p", {}, "Bookmark a job, or click Apply on one, and it lands here with a saved copy of the ad."),
+      h("div", { style: "display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap" },
+        h("button", { class: "btn primary", onclick: () => go("home") }, "Find jobs"),
+        h("button", { class: "btn", onclick: addJobDialog }, icon("plus", "sm"), "Add a job from elsewhere"))));
+    return;
+  }
+  fill($("#trkBody"), view === "list" ? trackerList(d.apps) : trackerBoard(d.apps));
+}
+
+function attentionCards(items) {
+  if (!items.length) return "";
+  const card = it => {
+    const a = it.app;
+    const head = h("div", { class: "t", onclick: () => openApp(a.id) }, h("b", {}, a.title), h("span", {}, niceCo(a.company)));
+    if (it.kind === "interview") {
+      const i = a.next_interview;
+      return h("div", { class: "attn-card k-int" }, h("div", { class: "lbl" }, icon("clock", "sm"), `${i.kind} · ${fmtDT(i.at)}`), head,
+        h("div", { class: "acts" }, h("a", { class: "btn sm", href: `/api/app/${a.id}/ics?i=${i.id}` }, "Add to calendar"), h("button", { class: "btn sm ghost", onclick: () => openApp(a.id) }, "Prep notes")));
+    }
+    if (it.kind === "did_apply") {
+      return h("div", { class: "attn-card k-ask" }, h("div", { class: "lbl" }, icon("ext", "sm"), `You opened the application ${dayWord(daysSince(a.apply_clicked_at))}`), head,
+        h("div", { class: "acts" }, h("button", { class: "btn sm primary", onclick: () => appUpdate(a.id, { status: "applied" }, "Marked as applied. We'll remind you to follow up in 7 days") }, "Yes, I applied"),
+          h("button", { class: "btn sm ghost", onclick: () => appUpdate(a.id, { dismiss_apply_prompt: true }) }, "Not yet")));
+    }
+    return h("div", { class: "attn-card k-fu" }, h("div", { class: "lbl" }, icon("mail", "sm"), `Applied ${dayWord(daysSince(a.applied_at))}, no reply yet`), head,
+      h("div", { class: "acts" }, h("button", { class: "btn sm primary", onclick: () => appEvent(a.id, "followup", "Followed up", "Logged. Next nudge in 7 days") }, "I followed up"),
+        h("button", { class: "btn sm", onclick: () => appEvent(a.id, "snooze", null, "OK, we'll ask again in 7 days") }, "Wait a week"),
+        h("button", { class: "btn sm ghost", onclick: () => appUpdate(a.id, { status: "no_reply" }, "Moved to Closed") }, "Give up")));
+  };
+  return h("section", { class: "sec", style: "margin-bottom:22px" }, h("div", { class: "sec-h" }, h("div", {}, h("h2", {}, h("span", { class: "ico", style: "background:var(--warn-bg);color:var(--warn)" }, icon("alert", "sm")), "Needs your attention"), h("p", {}, "Interviews this week, follow-ups due, and applications you may have sent."))),
+    h("div", { class: "attn" }, items.slice(0, 9).map(card)));
+}
+
+function trackerStats(s) {
+  const kpi = (lbl, val, sub) => h("div", { class: "bigstat" }, h("div", { class: "lbl" }, lbl), h("div", { class: "val num" }, val), h("div", { class: "sub" }, sub));
+  const W = 560, H = 150, padB = 24, padT = 16, n = s.weeks.length, bw = W / n, max = Math.max(...s.weeks.map(w => w.n), 1);
+  const svg = S("svg", { class: "wk", viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `Applications per week, last 8 weeks: ${s.weeks.map(w => w.n).join(", ")}` });
+  s.weeks.forEach((w, i) => {
+    const bh = w.n ? Math.max(3, w.n / max * (H - padB - padT)) : 0, x = i * bw + 6, wd = bw - 12;
+    if (bh) svg.append(S("path", { d: barPath(x, H - padB - bh, wd, bh, 4), fill: "var(--series)" }));
+    if (w.n) svg.append(S("text", { x: x + wd / 2, y: H - padB - bh - 5, "text-anchor": "middle", "font-size": 11.5, fill: "var(--ink-2)", "font-weight": 650 }, w.n));
+    const lab = i === n - 1 ? "This week" : new Date(w.start + "T00:00:00").toLocaleDateString("en-SG", { day: "numeric", month: "short" });
+    svg.append(S("text", { x: x + wd / 2, y: H - 6, "text-anchor": "middle", "font-size": 11, fill: "var(--ink-3)" }, lab));
+    svg.append(S("rect", { x: i * bw, y: padT, width: bw, height: H - padB - padT, fill: "transparent", "data-tip": `Week of ${new Date(w.start + "T00:00:00").toLocaleDateString("en-SG", { day: "numeric", month: "short" })}: ${w.n} application${w.n === 1 ? "" : "s"}` }));
+  });
+  svg.append(S("line", { x1: 0, x2: W, y1: H - padB + .5, y2: H - padB + .5, stroke: "var(--line-2)" }));
+  const chart = withTips(h("div", { class: "chartcard" }, h("h3", {}, "Applications per week"), h("p", { class: "hint" }, "Last 8 weeks. Steady beats bursts: aim for a few good applications every week."), svg,
+    h("details", { class: "tbl" }, h("summary", {}, "Show as a table"), h("table", { class: "t" }, h("thead", {}, h("tr", {}, h("th", {}, "Week of"), h("th", { class: "r" }, "Applications"))),
+      h("tbody", {}, s.weeks.map(w => h("tr", {}, h("td", {}, fmtDate(w.start)), h("td", { class: "r num" }, w.n))))))));
+  const src = h("div", { class: "chartcard" }, h("h3", {}, "Where replies come from"), h("p", { class: "hint" }, "Applications and replies by the site you found the job on."),
+    s.by_source.length ? h("table", { class: "t" }, h("thead", {}, h("tr", {}, h("th", {}, "Site"), h("th", { class: "r" }, "Applied"), h("th", { class: "r" }, "Replied"))),
+      h("tbody", {}, s.by_source.map(b => h("tr", {}, h("td", {}, b.source === "MCF" ? "MyCareersFuture" : b.source === "Careers" ? "Company career pages" : b.source), h("td", { class: "r num" }, b.applied), h("td", { class: "r num" }, b.replied))))) : h("p", { class: "muted" }, "Nothing yet."));
+  return h("div", {}, h("div", { class: "sec-h" }, h("div", {}, h("h2", {}, h("span", { class: "ico", style: "background:var(--series-soft);color:var(--series-ink)" }, icon("trend", "sm")), "How your search is going"), h("p", {}, "Based on applications with an applied date."))),
+    h("div", { class: "bigstats", style: "margin-top:0" },
+      kpi("Applications", nf.format(s.applied), `${s.this_week} this week`),
+      kpi("Reply rate", s.reply_rate != null ? s.reply_rate + "%" : "—", s.settled ? `${s.replied} of ${s.settled} got a reply` : "Shows once applications are a week old"),
+      kpi("Got an interview", s.interview_rate != null ? s.interview_rate + "%" : "—", `${s.interviews} interview${s.interviews === 1 ? "" : "s"} · ${s.offers} offer${s.offers === 1 ? "" : "s"}`),
+      kpi("Typical reply time", s.avg_reply_days != null ? `${s.avg_reply_days} day${s.avg_reply_days === 1 ? "" : "s"}` : "—", "from applying to first reply")),
+    h("div", { class: "two" }, chart, src));
+}
+
+function trackerBoard(apps) {
+  return h("div", { class: "board" }, STAGES.map(st => {
+    const items = apps.filter(a => stageOf(a.status) === st.key);
+    const el = h("div", { class: "col", "data-col": st.key }, h("h3", {}, h("span", { class: "dotc", style: `background:${st.color}` }), st.label, h("span", { class: "n" }, items.length)),
+      items.length ? items.map(trackerCard) : h("div", { class: "hint" }, st.hint));
+    el.addEventListener("dragover", e => { e.preventDefault(); el.classList.add("drop"); });
+    el.addEventListener("dragleave", () => el.classList.remove("drop"));
+    el.addEventListener("drop", e => {
+      e.preventDefault(); el.classList.remove("drop");
+      const id = e.dataTransfer.getData("text/plain"), a = apps.find(x => x.id === id);
+      if (!a || stageOf(a.status) === st.key) return;
+      appUpdate(id, { status: st.key === "closed" ? "rejected" : st.key }, st.key === "closed" ? "Moved to Closed as Rejected. Change it to No reply or Withdrawn on the card" : `Moved to ${st.label}`);
+    });
+    return el;
+  }));
+}
+function cardLine(a) {
+  if (a.status === "saved") return a.apply_clicked_at ? h("span", { class: "warnc" }, "Did you apply?") : `Saved ${dayWord(daysSince(a.created))}`;
+  if (a.status === "applied") return a.followup_due ? h("span", { class: "warnc" }, `Follow up · applied ${dayWord(daysSince(a.applied_at))}`) : `Applied ${dayWord(daysSince(a.applied_at))}`;
+  if (a.status === "interview") return a.next_interview ? h("span", { class: "intc" }, `${a.next_interview.kind} ${fmtDT(a.next_interview.at)}`) : "Interviewing";
+  if (a.status === "offer") return "Offer received";
+  return [stPill(a), a.applied_at ? ` applied ${fmtDate(a.applied_at)}` : ""];
+}
+function trackerCard(a) {
+  const sel = h("select", { "aria-label": "Status", onclick: e => e.stopPropagation(), onchange: e => appUpdate(a.id, { status: e.target.value }, `Moved to ${ST_LABEL[e.target.value]}`) },
+    Object.entries(ST_LABEL).map(([k, l]) => h("option", { value: k, selected: k === a.status }, l)));
+  const sal = salaryText(a);
+  return h("div", { class: "tcard", draggable: "true", tabindex: "0", ondragstart: e => e.dataTransfer.setData("text/plain", a.id), onclick: () => openApp(a.id), onkeydown: e => { if (e.key === "Enter") openApp(a.id); } },
+    h("div", { class: "r1" }, avatar(a.company, "sm"), h("div", { style: "min-width:0" }, h("div", { class: "title" }, a.title), h("div", { class: "co" }, niceCo(a.company), sal ? h("span", { class: "muted" }, ` · ${sal}${per(a)}`) : null))),
+    h("div", { class: "when" }, cardLine(a)),
+    a.note ? h("div", { class: "note" }, a.note) : null,
+    h("div", { class: "r2" }, a.ad_open === false ? h("span", { class: "muted", title: "The original ad has closed. Your saved copy is kept." }, "Ad closed") : h("span", {}), sel));
+}
+function trackerList(apps) {
+  const q = (state.trkQ || "").toLowerCase(), filt = state.trkF || "active";
+  const sortKey = state.trkSort || "updated";
+  let rows = apps.filter(a => (filt === "all" || (filt === "active" ? !CLOSED_ST.has(a.status) : CLOSED_ST.has(a.status))) && (!q || `${a.title} ${a.company}`.toLowerCase().includes(q)));
+  const key = { updated: a => a.updated || "", applied: a => a.applied_at || "", status: a => Object.keys(ST_LABEL).indexOf(a.status), company: a => niceCo(a.company).toLowerCase(), pay: a => a.salary_max || a.salary_min || 0 }[sortKey];
+  rows = rows.sort((x, y) => { const a = key(x), b = key(y); return (a < b ? 1 : a > b ? -1 : 0) * (sortKey === "company" || sortKey === "status" ? -1 : 1); });
+  const th = (k, l, cls) => h("th", { class: (cls || "") + " sortable", "aria-sort": sortKey === k ? "descending" : null, onclick: () => { state.trkSort = k; renderTracker(); } }, l, sortKey === k ? " ↓" : "");
+  const next = a => a.next_interview ? `${a.next_interview.kind} ${fmtDT(a.next_interview.at)}` : a.followup_due ? "Follow up now" : a.status === "applied" && a.next_followup ? `Follow up ${fmtDate(a.next_followup)}` : a.apply_clicked_at ? "Did you apply?" : "";
+  const search = h("input", { class: "inp", type: "search", placeholder: "Filter by job or company", value: state.trkQ || "", "aria-label": "Filter applications", oninput: e => { state.trkQ = e.target.value; clearTimeout(state.trkT); state.trkT = setTimeout(() => { renderTracker(); const i = $("#trkBody input[type=search]"); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }, 200); } });
+  return h("div", {},
+    h("div", { class: "lt-tools" }, search, h("div", { class: "chips" }, [["active", "In progress"], ["closed", "Closed"], ["all", "All"]].map(([k, l]) => h("button", { class: "chip", "aria-pressed": String(filt === k), onclick: () => { state.trkF = k; renderTracker(); } }, l)))),
+    rows.length ? h("div", { class: "lt-wrap" }, h("table", { class: "t lt" },
+      h("thead", {}, h("tr", {}, th("company", "Job"), th("status", "Status"), th("applied", "Applied"), h("th", {}, "Next step"), th("pay", "Pay", "r"), th("updated", "Updated", "r"))),
+      h("tbody", {}, rows.map(a => h("tr", { tabindex: "0", onclick: () => openApp(a.id), onkeydown: e => { if (e.key === "Enter") openApp(a.id); } },
+        h("td", {}, h("div", { class: "lt-job" }, avatar(a.company, "sm"), h("div", {}, h("b", {}, a.title), h("span", {}, niceCo(a.company))))),
+        h("td", {}, stPill(a)), h("td", { class: "num" }, a.applied_at ? fmtDate(a.applied_at) : h("span", { class: "muted" }, "—")),
+        h("td", {}, next(a)), h("td", { class: "r num" }, salaryText(a) ? salaryText(a) + per(a) : h("span", { class: "muted" }, "—")),
+        h("td", { class: "r muted" }, a.updated ? ago(a.updated) : "")))))) : h("div", { class: "empty" }, "Nothing matches."));
+}
+
+async function appUpdate(id, body, msg) {
+  const r = await post(`/api/app/${id}`, body);
+  if (msg) toast(msg);
+  afterAppChange(r);
+  return r;
+}
+async function appEvent(id, kind, text, msg) {
+  const r = await post(`/api/app/${id}/event`, { kind, text });
+  if (msg) toast(msg);
+  afterAppChange(r);
+  return r;
+}
+function afterAppChange(r) {
+  if (r?.job_id) { for (const s of state.home?.sections || []) for (const x of s.jobs) if (x.id === r.job_id) x.status = r.status; refreshCards({ id: r.job_id, status: r.status }); }
+  state.home = null;
+  if (state.view === "tracker") loadTracker();
+  if (state.appOpen && r?.id === state.appOpen) renderApp(r);
+  refreshMeta();
+}
+
+// ---------- application drawer
+async function openApp(id) {
+  state.appOpen = id; state.selected = null;
+  const dr = $("#drawer");
+  dr.classList.add("open"); dr.setAttribute("aria-hidden", "false"); $("#scrim").classList.add("on");
+  fill(dr, h("div", { class: "d-sec muted" }, "Loading…"));
+  try { renderApp(await api(`/api/app/${id}`)); } catch (e) { fill(dr, h("div", { class: "d-sec" }, e.message)); }
+}
+function field(label, key, a, { type = "text", placeholder = "", wide = false } = {}) {
+  const inp = h("input", { class: "inp", type, value: a[key] ?? "", placeholder, "aria-label": label });
+  inp.addEventListener("change", async () => {  // save quietly: re-rendering would steal focus from the next field
+    await post(`/api/app/${a.id}`, { [key]: inp.value });
+    toast("Saved"); state.trkDirty = true;
+  });
+  return h("label", { class: "fld" + (wide ? " wide" : "") }, h("small", {}, label), inp);
+}
+function renderApp(a) {
+  const dr = $("#drawer"), s = a.snap || {};
+  const sal = salaryText(a);
+  const url = safeUrl(a.url);
+  const seg = h("div", { class: "seg" }, Object.entries(ST_LABEL).map(([k, l]) => h("button", { "aria-pressed": String(a.status === k), onclick: () => a.status !== k && appUpdate(a.id, { status: k }, `Moved to ${l}`) }, l)));
+  const note = h("textarea", { class: "note", placeholder: "Notes: who referred you, what they asked, questions to ask them…", "aria-label": "Notes" }, a.note || "");
+  let nt; note.addEventListener("input", () => { clearTimeout(nt); nt = setTimeout(() => post(`/api/app/${a.id}`, { note: note.value }).then(() => toast("Note saved")), 700); });
+  const iAt = h("input", { class: "inp", type: "datetime-local", "aria-label": "Interview date and time" });
+  const iKind = h("select", { class: "sel", "aria-label": "Interview type" }, ["Phone screen", "Video interview", "In-person interview", "Assessment / test", "Final round"].map(k => h("option", {}, k)));
+  const iNote = h("input", { class: "inp", placeholder: "Who with, link or address (optional)", "aria-label": "Interview note" });
+  const addInt = h("form", { class: "int-add", onsubmit: async e => {
+    e.preventDefault(); if (!iAt.value) { iAt.focus(); return; }
+    const r = await post(`/api/app/${a.id}/interview`, { at: iAt.value, kind: iKind.value, note: iNote.value });
+    toast("Interview added"); afterAppChange(r);
+  } }, iAt, iKind, iNote, h("button", { class: "btn sm", type: "submit" }, icon("plus", "sm"), "Add"));
+  const nextBox = a.followup_due ? h("div", { class: "callout mass" }, icon("mail"), h("div", {}, h("b", {}, `Applied ${dayWord(daysSince(a.applied_at))}. Time to follow up`), h("span", {}, "A short, polite email to the recruiter or hiring manager often gets a reply. Then log it here."),
+      h("div", { class: "acts" }, h("button", { class: "btn sm primary", onclick: () => appEvent(a.id, "followup", "Followed up", "Logged. Next nudge in 7 days") }, "I followed up"), h("button", { class: "btn sm", onclick: () => appEvent(a.id, "snooze", null, "OK, we'll ask again in 7 days") }, "Wait a week"))))
+    : a.apply_clicked_at ? h("div", { class: "callout good" }, icon("ext"), h("div", {}, h("b", {}, "Did you apply?"), h("span", {}, `You opened the application ${dayWord(daysSince(a.apply_clicked_at))}.`),
+      h("div", { class: "acts" }, h("button", { class: "btn sm primary", onclick: () => appUpdate(a.id, { status: "applied" }, "Marked as applied") }, "Yes, I applied"), h("button", { class: "btn sm", onclick: () => appUpdate(a.id, { dismiss_apply_prompt: true }) }, "Not yet")))) : null;
+  const desc = s.description ? h("div", { class: "desc" + (s.description.length > 900 ? " clamp" : "") }, s.description) : null;
+  fill(dr,
+    h("div", { class: "d-head" },
+      h("div", { class: "row1" }, avatar(a.company, "lg"), h("div", { style: "min-width:0" }, h("h2", {}, a.title), h("div", { class: "co" }, niceCo(a.company), a.location ? ` · ${a.location}` : "")),
+        h("button", { class: "btn ghost sm d-close", onclick: closeDrawer, "aria-label": "Close", title: "Close (Esc)" }, icon("x"))),
+      h("div", { class: "d-pay" }, stPill(a), sal ? [h("span", { class: "big num", style: "font-size:20px" }, sal), h("small", {}, a.salary_period === "hour" ? "per hour" : "per month")] : null),
+      h("div", { class: "d-actions" },
+        url ? h("a", { class: "btn primary", href: url, target: "_blank", rel: "noopener noreferrer" }, a.ad_open === false ? "Original ad (may be closed)" : "Open the job ad", icon("ext", "sm")) : null,
+        a.job_id ? h("button", { class: "btn", onclick: () => openJob(a.job_id) }, "Job details & pay data") : null)),
+    nextBox ? h("div", { class: "d-sec" }, nextBox) : null,
+    h("div", { class: "d-sec" }, h("h4", {}, "Status"), seg),
+    h("div", { class: "d-sec" }, h("h4", {}, "Interviews"),
+      (a.interviews || []).length ? h("ul", { class: "ints" }, a.interviews.map(i => h("li", { class: i.at.slice(0, 10) < new Date().toISOString().slice(0, 10) ? "past" : "" },
+        h("div", {}, h("b", {}, i.kind), h("span", {}, fmtDT(i.at)), i.note ? h("small", {}, i.note) : null),
+        h("a", { class: "btn sm", href: `/api/app/${a.id}/ics?i=${i.id}`, title: "Download a calendar event with a 1-hour reminder" }, "Add to calendar"),
+        h("button", { class: "btn sm ghost", "aria-label": "Remove interview", onclick: async () => { const r = await post(`/api/app/${a.id}/interview-remove`, { id: i.id }); afterAppChange(r); } }, icon("x", "sm"))))) : null,
+      addInt),
+    h("div", { class: "d-sec" }, h("h4", {}, "Details"),
+      h("div", { class: "fgrid" },
+        field("Applied on", "applied_at", a, { type: "date" }), field("Next follow-up", "next_followup", a, { type: "date" }),
+        field("Recruiter / contact", "contact_name", a, { placeholder: "Name" }), field("Their email or phone", "contact_email", a, { placeholder: "name@company.com" }),
+        field("CV version sent", "cv_version", a, { placeholder: "e.g. CV-security-v3", wide: true }),
+        field("Pay you asked for", "salary_asked", a, { placeholder: "e.g. $6,500" }), field("Pay they offered", "salary_offered", a, { placeholder: "e.g. $6,200" })),
+      note),
+    h("div", { class: "d-sec" }, h("h4", {}, "Timeline"),
+      h("ul", { class: "tl" }, (a.events || []).map(e => h("li", { class: "k-" + e.type }, h("span", { class: "dt" }, new Date(e.at).toLocaleDateString("en-SG", { day: "numeric", month: "short" })), h("span", {}, e.text)))),
+      h("form", { class: "tl-add", onsubmit: async e => { e.preventDefault(); const t = e.target.elements[0]; if (!t.value.trim()) return; await appEvent(a.id, "note", t.value.trim(), "Added to timeline"); } },
+        h("input", { class: "inp", placeholder: "Log something: called HR, got a take-home test…", "aria-label": "Add to timeline" }), h("button", { class: "btn sm", type: "submit" }, "Log"))),
+    h("div", { class: "d-sec" }, h("h4", {}, "Your saved copy of the ad"),
+      h("p", { class: "help", style: "margin:-4px 0 10px" }, a.manual ? "Added by you." : `Saved ${fmtDate(a.created)}. Kept even after the original ad is taken down.`),
+      h("div", { class: "kvs", style: "margin-bottom:12px" }, [["Job type", s.employment_type], ["Level", s.level], ["Experience", s.min_experience != null ? `${s.min_experience}+ years` : null], ["Posted", s.posted ? fmtDate(s.posted) : null], ["Closes", s.expiry ? fmtDate(s.expiry) : null], ["Found on", (s.sources || []).map(x => ({ MCF: "MyCareersFuture", Careers: "Company career page" })[x] || x).join(", ")]]
+        .filter(([, v]) => v).map(([k, v]) => h("div", { class: "kv" }, h("small", {}, k), h("span", {}, v)))),
+      s.skills ? h("div", { class: "tags", style: "margin-bottom:12px" }, s.skills.split(",").map(x => x.trim()).filter(Boolean).map(x => h("span", { class: "tag" }, x))) : null,
+      desc || h("p", { class: "muted", style: "margin:0" }, "No description was available for this job."),
+      desc && desc.classList.contains("clamp") ? h("button", { class: "linkbtn", style: "margin-top:10px", onclick: e => { desc.classList.remove("clamp"); e.currentTarget.remove(); } }, "Read it all") : null),
+    h("div", { class: "d-sec" }, h("button", { class: "linkbtn", style: "color:var(--bad)", onclick: async () => {
+      if (!confirm(`Delete "${a.title}" from your tracker? Its timeline, notes and saved ad copy are deleted too.`)) return;
+      await post(`/api/app/${a.id}/delete`); closeDrawer(); toast("Deleted from tracker"); afterAppChange({ id: a.id, job_id: a.job_id, status: null });
+    } }, "Delete from tracker")));
+  dr.scrollTop = 0;
+}
+
+// ---------- "did you apply?" after coming back from an Apply link
+async function applyClicked(jobId, title, company) {
+  try { localStorage.setItem("cw.pendingApply", JSON.stringify({ jobId, title, company, at: Date.now() })); } catch {}
+  post(`/api/job/${jobId}/clicked`).then(r => { refreshCards({ id: jobId, status: r.status }); refreshMeta(); }).catch(() => {});
+}
+function checkPendingApply() {
+  let p = null; try { p = JSON.parse(localStorage.getItem("cw.pendingApply") || "null"); } catch {}
+  if (!p || Date.now() - p.at < 4000 || document.hidden) return;
+  try { localStorage.removeItem("cw.pendingApply"); } catch {}
+  const dlg = $("#dlg");
+  const done = () => { dlg.hidden = true; };
+  fill(dlg, h("div", { class: "box", style: "width:min(460px,100%)" },
+    h("div", { class: "mh" }, h("h2", {}, "Did you apply?"), h("p", {}, h("b", {}, p.title), ` at ${niceCo(p.company)}`)),
+    h("div", { class: "mb" }, h("p", { class: "muted", style: "margin:0" }, "If you did, ChiongWork logs today's date and reminds you to follow up in 7 days.")),
+    h("div", { class: "mf" },
+      h("button", { class: "linkbtn", onclick: done }, "Ask me later"),
+      h("button", { class: "btn", onclick: async () => { done(); const r = await post(`/api/job/${p.jobId}/status`, { status: "saved" }); afterAppChange({ job_id: p.jobId, status: r.status }); toast("Kept in Saved"); } }, "Not yet"),
+      h("button", { class: "btn primary", onclick: async () => {
+        done();
+        const r = await post(`/api/job/${p.jobId}/status`, { status: "applied" });
+        toast("Nice. Logged as applied, follow-up reminder in 7 days", { label: "Open tracker", fn: () => go("tracker") });
+        afterAppChange({ job_id: p.jobId, status: r.status });
+        if (state.selected === p.jobId) renderDrawer(r);
+      } }, "Yes, I applied"))));
+  dlg.hidden = false;
+}
+document.addEventListener("visibilitychange", () => setTimeout(checkPendingApply, 300));
+window.addEventListener("focus", () => setTimeout(checkPendingApply, 300));
+
+// ---------- add a job found elsewhere
+function addJobDialog() {
+  const dlg = $("#dlg");
+  const f = (name, label, attrs = {}) => h("label", { class: "fld" + (attrs.wide ? " wide" : "") }, h("small", {}, label), h(attrs.area ? "textarea" : "input", { class: attrs.area ? "note" : "inp", name, placeholder: attrs.ph || "", required: attrs.req || null, type: attrs.type || null, inputmode: attrs.num ? "numeric" : null }));
+  const err = h("div", { class: "gm-err", hidden: true });
+  const form = h("form", { onsubmit: async e => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form));
+    try { const r = await post("/api/app", data); dlg.hidden = true; toast("Added to your tracker"); go("tracker"); loadTracker(); openApp(r.id); }
+    catch (ex) { err.textContent = ex.message; err.hidden = false; }
+  } },
+    h("div", { class: "mh" }, h("h2", {}, "Add a job from elsewhere"), h("p", {}, "From a Telegram group, a referral, a recruiter's message or any site ChiongWork doesn't cover.")),
+    h("div", { class: "mb" }, h("div", { class: "fgrid" },
+      f("title", "Job title", { req: true, ph: "e.g. Cyber Threat Analyst" }), f("company", "Company", { req: true, ph: "e.g. OCBC" }),
+      f("url", "Link to the ad (optional)", { wide: true, ph: "https://", type: "url" }),
+      f("salary_min", "Pay from ($/month)", { ph: "5000", num: true }), f("salary_max", "Pay to ($/month)", { ph: "6500", num: true }),
+      h("label", { class: "fld" }, h("small", {}, "Status"), h("select", { class: "sel", name: "status" }, h("option", { value: "saved" }, "Saved"), h("option", { value: "applied" }, "Applied"), h("option", { value: "interview" }, "Interviewing"))),
+      f("source", "Where you found it", { ph: "e.g. Referral, Telegram" }),
+      f("description", "Paste the job ad (optional, so you keep a copy)", { wide: true, area: true })), err),
+    h("div", { class: "mf" }, h("button", { class: "linkbtn", type: "button", onclick: () => { dlg.hidden = true; } }, "Cancel"), h("button", { class: "btn primary", type: "submit" }, "Add to tracker")));
+  fill(dlg, h("div", { class: "box" }, form));
+  dlg.hidden = false;
+  setTimeout(() => $("input", form).focus(), 30);
+}
+
+// ============================================================ COMMUTE
+function commuteSection(d) {
+  const home = state.meta?.home;
+  const maps = d.postal ? h("a", { class: "linkbtn", href: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent("Singapore " + d.postal)}&travelmode=transit`, target: "_blank", rel: "noopener noreferrer", title: "Opens Google Maps with only the workplace; it asks you for the start" }, "Plan the exact route", icon("ext", "sm")) : null;
+  let body;
+  if (!d.has_place) body = h("p", { class: "help", style: "margin:0" }, d.mode ? `${d.mode}. ` : "", "This listing doesn't give a workplace address, so the commute can't be estimated.");
+  else if (!home) body = h("div", { class: "cv-promo" }, icon("home"), h("span", {}, h("b", {}, "How far is it? "), "Add your home postal code and every job shows a rough travel time."),
+    h("button", { class: "linkbtn", onclick: () => { closeDrawer(); go("settings"); } }, "Add postal code", icon("arrow", "sm")));
+  else body = h("div", {}, h("div", { class: "commute" }, h("div", {}, h("span", { class: "big num" }, `~${d.mins} min`), h("small", {}, "by public transport, roughly")),
+      h("div", { class: "help" }, `${d.km} km from home in a straight line.`, d.mode ? ` ${d.mode} possible.` : "", h("br"), "Real times depend on your MRT line and buses.")),
+    h("div", { style: "margin-top:8px" }, maps));
+  return h("div", { class: "d-sec" }, h("h4", {}, "Getting there"), body);
+}
+
+// ============================================================ CV MATCH
+const MT = { strong: 60, good: 45 };
+function matchBand(m) { return m >= MT.strong ? "strong" : m >= MT.good ? "good" : m >= 30 ? "some" : null; }
+function matchPill(m) {
+  const b = m != null ? matchBand(m) : null;
+  return b ? h("span", { class: "pill mt-" + b, title: "How well this job's skills and title fit your CV" }, `${m}% match`) : null;
+}
+function matchSection(d) {
+  if (!d.cv) return state.meta?.cv ? null : h("div", { class: "d-sec" }, h("div", { class: "cv-promo" }, icon("file"),
+    h("span", {}, h("b", {}, "See how well you match. "), "Upload your CV once and every job shows a match score and the skills you're missing."),
+    h("button", { class: "linkbtn", onclick: () => { closeDrawer(); go("cv"); } }, "Add CV", icon("arrow", "sm"))));
+  const m = d.cv, b = matchBand(m.score) || "low";
+  const add = s => async () => { toast(`Adding “${s}” and re-scoring every job…`); await post("/api/cv/skills", { add: [s] }); state.home = null; renderDrawer(await api(`/api/job/${d.id}`)); toast(`Added “${s}” to your skills`); };
+  return h("div", { class: "d-sec" }, h("h4", {}, "How well you match"),
+    h("div", { class: "mrow" }, h("div", { class: "mscore mt-" + b }, h("b", { class: "num" }, m.score + "%"), h("small", {}, { strong: "Strong match", good: "Good match", some: "Partial match", low: "Weak match" }[b])),
+      h("div", { class: "mbar", role: "img", "aria-label": `${m.score}% match` }, h("i", { class: "mt-" + b, style: `width:${m.score}%` }))),
+    m.have.length ? h("div", { class: "mlist" }, h("small", {}, "You have"), h("div", { class: "tags" }, m.have.map(s => h("span", { class: "tag ok" }, icon("check", "sm"), s)))) : null,
+    m.missing.length ? h("div", { class: "mlist" }, h("small", {}, "Not on your CV (click if you have it)"), h("div", { class: "tags" }, m.missing.map(s => h("button", { class: "tag miss", title: "I have this skill: add it to my CV skills", onclick: add(s) }, icon("plus", "sm"), s)))) : null,
+    m.exp_gap ? h("p", { class: "help", style: "margin:10px 0 0" }, icon("alert", "sm"), ` Asks for ${m.exp_gap}+ years; your CV shows about ${m.years}.`) : null);
+}
+
+async function loadCv(data) {
+  const box = $("#cvBody");
+  if (!data) fill(box, h("div", { class: "skel", style: "min-height:240px" }));
+  const d = data || await api("/api/cv");
+  state.cv = d;
+  if (d.thresholds) Object.assign(MT, d.thresholds);
+  const fileIn = h("input", { type: "file", accept: ".pdf,.docx,.txt,.md,.rtf,text/plain,application/pdf", hidden: true, onchange: () => fileIn.files[0] && uploadCv(fileIn.files[0]) });
+  const pick = () => fileIn.click();
+  if (!d.has) {
+    const drop = h("div", { class: "drop", tabindex: "0", role: "button", "aria-label": "Choose your CV file", onclick: pick, onkeydown: e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } },
+      ondragover: e => { e.preventDefault(); drop.classList.add("over"); }, ondragleave: () => drop.classList.remove("over"),
+      ondrop: e => { e.preventDefault(); drop.classList.remove("over"); e.dataTransfer.files[0] && uploadCv(e.dataTransfer.files[0]); } },
+      icon("file", "lg"), h("h3", {}, "Drop your CV here"), h("p", {}, "PDF or Word (.docx). You can also click to choose the file."), fileIn);
+    const ta = h("textarea", { class: "note", style: "min-height:160px", placeholder: "Paste the text of your CV here…", "aria-label": "CV text" });
+    fill(box, h("div", { class: "stack" }, drop,
+      h("details", { class: "card-box" }, h("summary", { style: "cursor:pointer;font-weight:650" }, "Or paste your CV as text"), ta,
+        h("button", { class: "btn primary", style: "margin-top:10px", onclick: () => saveCvText(ta.value) }, "Use this text")),
+      privacyNote()));
+    return;
+  }
+  const strongLink = () => go("search", { sort: "match", min_match: MT.strong });
+  const tile = (lbl, n, sub, onclick) => h("button", { class: "kpi", onclick }, h("span", { class: "lbl" }, lbl), h("span", { class: "val num" }, nf.format(n)), h("span", { class: "sub" }, sub));
+  const spec = d.skills.filter(s => !s.general), gen = d.skills.filter(s => s.general);
+  const chip = s => h("span", { class: "skchip" + (s.added ? " added" : "") }, s.name, s.jobs ? h("small", {}, nf.format(s.jobs)) : null,
+    h("button", { "aria-label": `Remove ${s.name}`, title: "Not my skill: remove", onclick: () => editCv({ remove: [s.key] }, `Removed “${s.name}”`) }, icon("x", "sm")));
+  const addIn = h("input", { class: "inp", placeholder: "Add a skill, e.g. CISSP, Tableau, IFRS 9", list: "skillList", "aria-label": "Add a skill" });
+  const dl = h("datalist", { id: "skillList" });
+  let st; addIn.addEventListener("input", () => { clearTimeout(st); st = setTimeout(async () => { const r = await api("/api/skills?q=" + encodeURIComponent(addIn.value)); fill(dl, r.skills.map(s => h("option", { value: s }))); }, 200); });
+  const addForm = h("form", { class: "tl-add", onsubmit: e => { e.preventDefault(); const v = addIn.value.trim(); if (v) editCv({ add: [v] }, `Added “${v}”`); } }, addIn, dl, h("button", { class: "btn", type: "submit" }, icon("plus", "sm"), "Add"));
+  const yrs = h("input", { class: "inp", type: "number", min: 0, max: 50, value: d.years ?? "", style: "width:90px", "aria-label": "Years of work experience" });
+  yrs.addEventListener("change", () => editCv({ years: yrs.value }, "Experience updated"));
+  fill(box, h("div", { class: "stack" },
+    h("div", { class: "card-box cv-file" }, icon("file", "lg"), h("div", {}, h("b", {}, d.filename), h("div", { class: "muted" }, `Added ${ago(d.uploaded)} · ${d.skills.length} skills found`)),
+      h("div", { class: "acts", style: "margin:0 0 0 auto" }, h("button", { class: "btn sm", onclick: pick }, "Replace CV"), fileIn,
+        h("button", { class: "btn sm ghost", onclick: async () => { if (!confirm("Remove your CV and all match scores? Your skill edits are deleted too.")) return; loadCv(await post("/api/cv/delete")); refreshMeta(); state.home = null; } }, "Remove"))),
+    h("div", { class: "kpis", style: "grid-template-columns:repeat(3,minmax(0,1fr));margin:0" },
+      tile(`Strong matches (${MT.strong}%+)`, d.bands.strong, "Apply to these first", strongLink),
+      tile(`Good matches (${MT.good}–${MT.strong - 1}%)`, d.bands.good, "Worth a look", () => go("search", { sort: "match", min_match: MT.good })),
+      tile("Partial matches (30%+)", d.bands.strong + d.bands.good + d.bands.some, "Stretch roles", () => go("search", { sort: "match", min_match: 30 }))),
+    d.learn.length ? h("div", { class: "card-box" }, h("h3", {}, "Skills employers keep asking for that aren't on your CV"),
+      h("p", { class: "help", style: "margin:0 0 12px" }, `From the ${nf.format(d.near_jobs)} jobs closest to your CV${state.profile?.roles?.length ? " and your roles" : ""}. Have one already? Click it: it's probably just worded differently on your CV. If not, it's worth learning.`),
+      h("div", { class: "tags" }, d.learn.map(x => h("button", { class: "tag miss", onclick: () => editCv({ add: [x.skill] }, `Added “${x.skill}”`) }, icon("plus", "sm"), x.skill, h("small", {}, `${x.jobs} jobs`))))) : null,
+    h("div", { class: "card-box" }, h("h3", {}, "Skills on your CV"),
+      h("p", { class: "help", style: "margin:0 0 12px" }, "Specific skills count the most. The number is how many live jobs ask for it. Remove anything that isn't really yours, and add what's missing."),
+      h("div", { class: "skwrap" }, spec.map(chip)),
+      gen.length ? [h("h4", { class: "sk-h" }, "General skills (count for less)"), h("div", { class: "skwrap" }, gen.map(chip))] : null,
+      h("div", { style: "margin-top:14px" }, addForm),
+      d.removed.length ? h("p", { class: "help", style: "margin:12px 0 0" }, "Removed: ", d.removed.map((r, i) => [i ? ", " : "", h("button", { class: "linkbtn", onclick: () => editCv({ add: [r] }, `Restored “${r}”`) }, r)])) : null),
+    h("div", { class: "card-box", style: "display:flex;gap:12px;align-items:center;flex-wrap:wrap" }, h("div", { style: "flex:1;min-width:220px" }, h("b", {}, "Years of work experience"),
+      h("div", { class: "help" }, d.years_set_by_you ? "Set by you." : "Worked out from the dates on your CV (study years left out). Correct it if it's off.")), yrs, h("span", { class: "muted" }, "years")),
+    privacyNote()));
+}
+function privacyNote() {
+  return h("div", { class: "gm-safe" }, icon("shield", "sm"), h("span", {}, h("b", {}, "Private. "), "Your CV is read and matched on this PC only; it is never sent to any website or AI service. The text is kept in your data file on this computer so scores can be refreshed as new jobs arrive."));
+}
+async function uploadCv(f) {
+  fill($("#cvBody"), h("div", { class: "card-box", style: "text-align:center;padding:40px 20px" }, h("div", { class: "bar", style: "height:3px;border-radius:3px;background:var(--line);overflow:hidden;max-width:320px;margin:0 auto 14px" }, h("i", { style: "display:block;height:100%;width:35%;background:var(--accent);animation:indet 1.2s ease-in-out infinite" })),
+    h("b", {}, `Reading ${f.name}`), h("p", { class: "muted", style: "margin:4px 0 0" }, `Then scoring every live job against it. About 10 seconds.`)));
+  try {
+    const r = await api("/api/cv/upload", { method: "POST", headers: { "X-Filename": encodeURIComponent(f.name), "Content-Type": "application/octet-stream" }, body: await f.arrayBuffer() });
+    state.home = null; refreshMeta(); loadCv(r);
+    toast(`Done: ${r.bands.strong} strong matches`, r.bands.strong ? { label: "See them", fn: () => go("search", { sort: "match", min_match: MT.strong }) } : null);
+  } catch (e) { await loadCv(); $("#cvBody").prepend(h("div", { class: "gm-err", style: "margin-bottom:12px" }, e.message)); }
+}
+async function saveCvText(text) {
+  try { const r = await post("/api/cv/text", { text }); state.home = null; refreshMeta(); loadCv(r); toast("CV added. Every job now has a match score"); }
+  catch (e) { toast(e.message); }
+}
+async function editCv(body, msg) {
+  toast("Updating your match scores…");
+  const r = await post("/api/cv/skills", body);
+  state.home = null; loadCv(r); if (msg) toast(msg);
+}
+
+// ============================================================ GMAIL
+let gmPoll = null;
+function gmailSummary(g) {
+  const t = g.totals, r = g.last_result;
+  if (!t || !t.job_emails) return h("p", { class: "help", style: "margin:12px 0 0" }, `No job-alert emails found${r ? ` in the last ${r.days} days` : ""}. Turn on job alerts on LinkedIn, JobStreet or Indeed (sent to this Gmail), and their jobs appear here after the next refresh.`);
+  const src = Object.entries(t.by_source || {}).map(([k, n]) => `${nf.format(n)} from ${({ linkedin: "LinkedIn", jobstreet: "JobStreet", indeed: "Indeed", glassdoor: "Glassdoor" })[k] || k}`).join(" · ");
+  const last = r ? (r.job_emails ? `Last check: ${r.job_emails} new alert email${r.job_emails === 1 ? "" : "s"}, ${r.new} new job${r.new === 1 ? "" : "s"}.` : "Last check: no new alert emails.") : "";
+  return h("div", {},
+    h("div", { class: "gm-stats" },
+      h("span", {}, h("b", { class: "num" }, nf.format(t.job_emails)), "alert emails read"),
+      h("span", {}, h("b", { class: "num" }, nf.format(t.links)), "jobs found"),
+      h("span", {}, h("b", { class: "num" }, nf.format(t.new)), "new to your feed"),
+      h("span", {}, h("b", { class: "num" }, nf.format(t.merged)), "also on MyCareersFuture")),
+    h("p", { class: "help", style: "margin:8px 0 0" }, [src, last].filter(Boolean).join(" · ")),
+    r && r.no_jobs ? h("p", { class: "help", style: "margin:6px 0 0" }, `${r.no_jobs} other email${r.no_jobs === 1 ? "" : "s"} from those sites had no job links (newsletters, reminders).`) : null);
+}
+async function loadImport(g) {
+  const box = $("#gmailBox");
+  g = g || await api("/api/gmail").catch(e => ({ error: e.message }));
+  state.gmail = g;
+  if (g.connected) {
+    const checking = g.checking;
+    fill(box,
+      h("div", { class: "gm-head ok" }, h("span", { class: "ico" }, icon(checking ? "refresh" : "check")),
+        h("div", {}, h("h3", {}, "Gmail connected"), h("p", {}, g.address, h("span", { class: "muted" }, g.last_check ? ` · checked ${ago(g.last_check)}` : "")))),
+      checking ? h("div", { style: "margin-top:16px" }, h("div", { class: "bar" }, h("i")), h("p", { class: "help", style: "margin:8px 0 0" }, g.last_check ? "Reading new alert emails…" : "Reading your job-alert emails from the last 30 days. This takes about a minute the first time.")) : gmailSummary(g),
+      g.error ? h("div", { class: "gm-err" }, g.error) : null,
+      h("div", { class: "gm-actions" },
+        h("button", { class: "btn", disabled: checking, onclick: async () => { loadImport(await post("/api/gmail/check")); } }, icon("refresh", "sm"), checking ? "Checking…" : "Check now"),
+        h("span", { class: "muted", style: "font-size:13px" }, "It also checks automatically every time you refresh jobs."),
+        h("button", { class: "linkbtn", style: "margin-left:auto;color:var(--ink-3)", onclick: async () => {
+          if (!confirm("Disconnect Gmail? ChiongWork deletes the saved app password from this PC. Jobs already added stay in your feed.")) return;
+          loadImport(await post("/api/gmail/disconnect")); toast("Gmail disconnected");
+        } }, "Disconnect")),
+      h("div", { class: "gm-safe", style: "margin-top:16px" }, icon("shield", "sm"), h("span", {}, "Read-only: nothing in your Gmail is marked read, moved or deleted, and only emails from job sites are downloaded.")));
+    clearTimeout(gmPoll);
+    if (checking) gmPoll = setTimeout(async () => {
+      const n = await api("/api/gmail").catch(() => null);
+      if (!n) return;
+      if (!n.checking) {
+        state.home = null; refreshMeta();
+        if (n.error) toast("Gmail check failed: " + n.error);
+        else if (n.last_result) toast(n.last_result.new ? `Added ${n.last_result.new} jobs from your alert emails` : "Gmail checked: no new jobs", n.last_result.links ? { label: "See them", fn: () => go("search", { source: Object.keys(n.last_result.by_source)[0] || "" }) } : null);
+      }
+      if (state.view === "import") loadImport(n);
+    }, 2000);
+    return;
+  }
+  const addr = h("input", { class: "inp", type: "email", placeholder: "you@gmail.com", autocomplete: "email", "aria-label": "Gmail address" });
+  const pw = h("input", { class: "inp", type: "password", placeholder: "16-letter app password", autocomplete: "off", spellcheck: "false", "aria-label": "Gmail app password" });
+  const err = h("div", { class: "gm-err", hidden: true });
+  const btn = h("button", { class: "btn primary", type: "submit" }, "Connect Gmail");
+  const form = h("form", { class: "gm-form", onsubmit: async e => {
+    e.preventDefault(); err.hidden = true; btn.disabled = true; btn.textContent = "Checking…";
+    try { const r = await post("/api/gmail/connect", { address: addr.value, password: pw.value }); pw.value = ""; toast("Gmail connected. Reading your alerts…"); loadImport(r); }
+    catch (ex) { err.textContent = ex.message; err.hidden = false; }
+    finally { btn.disabled = false; btn.textContent = "Connect Gmail"; }
+  } }, addr, pw, btn);
+  fill(box,
+    h("div", { class: "gm-head" }, h("span", { class: "ico" }, icon("mail")),
+      h("div", {}, h("h3", {}, "Connect your Gmail"), h("p", {}, "Once connected, every refresh picks up the jobs from your LinkedIn, JobStreet, Indeed and Glassdoor alert emails. Takes about 3 minutes, once."))),
+    h("ol", { class: "steps" },
+      h("li", {}, h("b", { class: "t" }, "Turn on job alerts, sent to this Gmail"),
+        "On LinkedIn, JobStreet and Indeed, search for your role and turn on the alert for that search (LinkedIn: ", h("b", {}, "Set alert"), "; JobStreet: ", h("b", {}, "Save search"), "; Indeed: ", h("b", {}, "Get new jobs by email"), ").",
+        h("p", { class: "help" }, "Already getting alerts? Skip this. ChiongWork also reads the last 30 days of alerts you already have.")),
+      h("li", {}, h("b", { class: "t" }, "Create a Gmail app password"),
+        "Open ", h("a", { href: "https://myaccount.google.com/apppasswords", target: "_blank", rel: "noopener" }, "Google app passwords"), ", type ", h("b", {}, "ChiongWork"), " as the name, click ", h("b", {}, "Create"), ", and copy the 16-letter code Google shows you.",
+        h("p", { class: "help" }, "If Google says app passwords aren't available, turn on 2-Step Verification first (Google Account → Security), then try the link again. An app password is not your normal Gmail password, and you can delete it any time on that same page.")),
+      h("li", {}, h("b", { class: "t" }, "Paste it here"), form, err)),
+    h("div", { class: "gm-safe" }, icon("shield", "sm"), h("span", {},
+      h("b", {}, "What ChiongWork does with it. "), "It opens your mailbox read-only and downloads only emails from LinkedIn, JobStreet, Indeed and Glassdoor; nothing is marked read, moved, deleted or sent. The app password is saved in your system's password store on this computer (Windows Credential Manager or the macOS/Linux keychain), never in a file. Note that Google app passwords can't be limited to read-only, so treat it like a password and don't share it.")));
+}
+
+// ============================================================ IMPORT
+async function importFiles(files) {
+  const box = $("#importResults");
+  for (const f of files) {
+    const card = h("div", { class: "card-box" }, h("h3", {}, f.name), h("div", { class: "muted" }, "Reading…"));
+    box.prepend(card);
+    try {
+      const r = await api("/api/import", { method: "POST", headers: { "X-Filename": f.name, "Content-Type": "application/octet-stream" }, body: await f.arrayBuffer() });
+      fill(card, h("h3", {}, f.name),
+        h("p", { style: "margin:0 0 8px" }, r.links ? `Found ${r.links} job${r.links === 1 ? "" : "s"}: ${r.new} new, ${r.merged} matched a job already in your feed${r.seen ? `, ${r.seen} already added before` : ""}.` : "No job links found. Is this a LinkedIn, JobStreet, Indeed or Glassdoor alert email?"),
+        ...r.jobs.map(j => h("div", { class: "res-line" }, h("span", { class: "pill " + (j.result === "merged" ? "good" : j.result === "new" ? "new" : "status") }, j.result === "merged" ? "Matched" : j.result === "new" ? "New" : "Already had"),
+          h("a", { onclick: () => openJob(j.id) }, j.title), h("span", { class: "muted" }, `${niceCo(j.company)} · ${j.source}`))));
+    } catch (e) { fill(card, h("h3", {}, f.name), h("div", { style: "color:var(--bad)" }, e.message)); }
+  }
+  state.home = null; refreshMeta();
+}
+
+// ============================================================ PROFILE (onboarding + settings)
+let SUGG = null;
+async function profileForm(container, { onDone, compact } = {}) {
+  if (!SUGG) SUGG = await api("/api/suggestions");
+  const p = { roles: [], min_pay: null, levels: [], direct: false, hide_noise: true, ...(state.profile || {}) };
+  const roles = [...p.roles];
+  const chipsBox = h("div", { class: "roleinput" });
+  const input = h("input", { placeholder: roles.length ? "Add another role…" : "Type a role and press Enter, e.g. accountant", "aria-label": "Roles you're looking for" });
+  const sugg = h("div", { class: "chips sugg", style: "margin-top:10px" });
+  function drawRoles() {
+    fill(chipsBox, ...roles.map((r, i) => h("button", { type: "button", class: "chip", onclick: () => { roles.splice(i, 1); drawRoles(); } }, r, h("span", { class: "x" }, icon("x", "sm")))), input);
+    input.placeholder = roles.length ? "Add another role…" : "Type a role and press Enter, e.g. accountant";
+    fill(sugg, ...SUGG.roles.filter(s => !roles.some(r => r.toLowerCase() === s.role.toLowerCase())).slice(0, compact ? 10 : 14).map(s =>
+      h("button", { type: "button", class: "chip", onclick: () => { roles.push(s.role); drawRoles(); } }, icon("plus", "sm"), s.role, h("small", {}, nf.format(s.n)))));
+  }
+  const addTyped = () => { const v = input.value.trim().replace(/,$/, ""); if (v && !roles.some(r => r.toLowerCase() === v.toLowerCase())) roles.push(v); input.value = ""; drawRoles(); input.focus(); };
+  input.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTyped(); } else if (e.key === "Backspace" && !input.value && roles.length) { roles.pop(); drawRoles(); } });
+  drawRoles();
+  let minPay = p.min_pay ? String(p.min_pay) : "";
+  const payChips = h("div", { class: "chips" });
+  const drawPay = () => fill(payChips, ...[["", "Any"], ["3000", "$3k+"], ["4000", "$4k+"], ["5000", "$5k+"], ["6000", "$6k+"], ["8000", "$8k+"], ["10000", "$10k+"]].map(([v, l]) => h("button", { type: "button", class: "chip", "aria-pressed": String(minPay === v), onclick: () => { minPay = v; drawPay(); } }, l)));
+  drawPay();
+  const levels = new Set(p.levels);
+  const lvChips = h("div", { class: "chips" });
+  const drawLv = () => fill(lvChips, ...SUGG.levels.map(l => h("button", { type: "button", class: "chip", "aria-pressed": String(levels.has(l)), onclick: () => { levels.has(l) ? levels.delete(l) : levels.add(l); drawLv(); } }, l)));
+  drawLv();
+  const home = state.meta?.home;
+  const postal = h("input", { class: "inp", inputmode: "numeric", maxlength: 6, placeholder: "e.g. 520123", value: home?.postal || "", "aria-label": "Home postal code" });
+  const postalNote = h("span", { class: "help" }, home ? { exact: "Found exactly.", near: "Placed using a neighbouring postal code.", area: "Placed at the middle of your postal area (rough)." }[home.precision] : "Stays on this PC.");
+  let maxC = p.max_commute ? String(p.max_commute) : "";
+  const comChips = h("div", { class: "chips" });
+  const drawCom = () => fill(comChips, ...[["", "Any"], ["30", "≤ 30 min"], ["45", "≤ 45 min"], ["60", "≤ 60 min"], ["75", "≤ 75 min"]].map(([v, l]) => h("button", { type: "button", class: "chip", "aria-pressed": String(maxC === v), onclick: () => { maxC = v; drawCom(); } }, l)));
+  drawCom();
+  const noise = h("input", { type: "checkbox", checked: p.hide_noise !== false });
+  const direct = h("input", { type: "checkbox", checked: !!p.direct });
+  const save = async () => {
+    if (input.value.trim()) addTyped();
+    const pc = postal.value.replace(/\D/g, "");
+    if (pc !== (state.meta?.home?.postal || "")) {
+      if (pc && pc.length !== 6) { postalNote.textContent = "A Singapore postal code has 6 digits."; postalNote.style.color = "var(--bad)"; postal.focus(); throw new Error("bad postal code"); }
+      try { const r = await post("/api/home", { postal: pc }); state.meta.home = r.home; }
+      catch (e) { postalNote.textContent = e.message; postalNote.style.color = "var(--bad)"; postal.focus(); throw e; }
+    }
+    const saved = await post("/api/profile", { roles, min_pay: minPay, levels: [...levels], direct: direct.checked, hide_noise: noise.checked, max_commute: maxC });
+    state.profile = saved; state.home = null;
+    onDone && onDone(saved);
+  };
+  fill(container, 
+    h("div", { class: "form-row" }, h("label", {}, "What jobs are you looking for?"), h("p", { class: "help" }, "Add one or more. We match them against job titles."), chipsBox, sugg),
+    h("div", { class: "form-row" }, h("span", { class: "lbl" }, "Minimum pay per month"), payChips),
+    h("div", { class: "form-row" }, h("span", { class: "lbl" }, "Your level"), h("p", { class: "help" }, "Pick any that fit, or none for all levels."), lvChips),
+    h("div", { class: "form-row" }, h("span", { class: "lbl" }, "Where you live (for commute times)"), h("p", { class: "help" }, "Your home postal code. It's matched against job addresses on this PC and never sent anywhere."),
+      h("div", { class: "postal-row" }, postal, postalNote), h("p", { class: "help", style: "margin:12px 0 8px" }, "Longest commute you'd accept (jobs without an address are kept):"), comChips),
+    h("div", { class: "form-row" },
+      h("label", { class: "toggle" }, noise, h("span", {}, h("b", {}, "Hide the noise (recommended)"), "Ghost jobs that never close, copy-pasted mass-hiring ads, and hype-style “no experience, travel perks” sales ads.")),
+      h("label", { class: "toggle" }, direct, h("span", {}, h("b", {}, "Direct employers only"), "Leave out jobs posted by recruitment agencies."))),
+  );
+  return save;
+}
+async function showOnboarding() {
+  const m = $("#onboard");
+  const body = h("div", { class: "mb" }, h("div", { class: "skel", style: "min-height:220px" }));
+  const btn = h("button", { class: "btn primary" }, "Show my jobs", icon("arrow", "sm"));
+  fill(m, h("div", { class: "box" },
+    h("div", { class: "mh" }, h("h2", { id: "obTitle" }, state.profile?.setup_done ? "What are you looking for?" : "Let's find your next job"), h("p", {}, "ChiongWork searches MyCareersFuture, company career pages and your LinkedIn/JobStreet alerts at once. Tell it what matters to you.")),
+    body,
+    h("div", { class: "mf" }, h("button", { class: "linkbtn", onclick: () => { m.hidden = true; if (!state.profile?.setup_done) go("search"); } }, state.profile?.setup_done ? "Cancel" : "Skip, just let me search"), btn)));
+  m.hidden = false;
+  const save = await profileForm(body, { onDone: () => { m.hidden = true; toast("Your feed is ready"); go("home"); loadHome(true); } });
+  btn.onclick = async () => { btn.disabled = true; btn.firstChild.textContent = "Finding your jobs…"; try { await save(); } finally { btn.disabled = false; } };
+  setTimeout(() => $("input", body)?.focus(), 50);
+}
+async function loadSettings() {
+  const box = $("#profileForm");
+  const save = await profileForm(box, { compact: true, onDone: () => toast("Saved. Your For you page is updated") });
+  box.append(h("button", { class: "btn primary", onclick: save }, "Save changes"));
+  const m = state.meta;
+  fill($("#dataBox"), h("h3", {}, "Where your data is saved"),
+    h("p", { style: "margin:0;color:var(--ink-2)" }, h("b", {}, "Your profile, tracker and notes"), ". Small, and kept in the app folder (if that folder syncs to OneDrive, iCloud or Dropbox, it's backed up too). If the job cache is ever deleted, your tracker is restored from here."),
+    h("div", { class: "path" }, m.paths.yours),
+    h("p", { style: "margin:14px 0 0;color:var(--ink-2)" }, h("b", {}, "The job cache"), " (~270 MB). It's kept outside the app folder on purpose: it's rewritten on every refresh, and cloud-syncing a live database can corrupt it. It's re-downloadable, so it's safe to delete."),
+    h("div", { class: "path" }, m.paths.cache));
+  const src = m.by_source || {};
+  fill($("#sourcesBox"), h("h3", {}, "Where the jobs come from"),
+    h("table", { class: "t" }, h("tbody", {},
+      h("tr", {}, h("td", {}, h("b", {}, "MyCareersFuture"), h("div", { class: "muted" }, "Government job portal: public data, full salary and applicant numbers")), h("td", { class: "r num" }, nf.format(src.MCF || 0))),
+      h("tr", {}, h("td", {}, h("b", {}, "Company career pages"), h("div", { class: "muted" }, "48 companies including Grab, Stripe, Wise, Airwallex and Databricks")), h("td", { class: "r num" }, nf.format(src.Careers || 0))),
+      h("tr", {}, h("td", {}, h("b", {}, "LinkedIn, JobStreet, Indeed"), h("div", { class: "muted" }, "From alert emails you add. Those sites don't allow automated access")), h("td", { class: "r num" }, nf.format((src.LinkedIn || 0) + (src.JobStreet || 0) + (src.Indeed || 0) + (src.Glassdoor || 0)))))));
+}
+
+// ============================================================ META / REFRESH
+let pollTimer = null;
+async function refreshMeta() {
+  const m = await api("/api/meta");
+  const first = !state.meta;
+  state.meta = m; state.profile = m.profile;
+  $("#navTracked").hidden = !m.tracked; $("#navTracked").textContent = m.tracked;
+  $("#q").placeholder = `Search ${nf.format(m.active)} Singapore jobs: title or company`;
+  if (first) {
+    fill($("#f-type"), h("option", { value: "" }, "Any job type"), ...m.types.map(v => h("option", { value: v }, v)));
+    fill($("#f-level"), h("option", { value: "" }, "Any level"), ...m.levels.map(v => h("option", { value: v }, v)));
+  }
+  renderSrcBox(m.fetch);
+  const gm = m.gmail || {};
+  if ($("#setCv")) $("#setCv").textContent = m.cv ? "Added. Edit your skills or replace it" : "Upload it to see your match score on every job";
+  if ($("#setGmail")) $("#setGmail").textContent = gm.connected ? `Gmail connected (${gm.address}). Alerts are read on every refresh` : "Connect your Gmail so their job alerts appear here";
+  return m;
+}
+function renderSrcBox(f) {
+  const m = state.meta, running = f && f.running;
+  const srcN = Object.keys(m.by_source || {}).length;
+  fill($("#srcbox"), 
+    h("div", { class: "row" }, h("span", {}, h("b", { class: "num" }, nf.format(m.active)), " live jobs"), h("span", { class: "muted" }, `${srcN} source${srcN === 1 ? "" : "s"}`)),
+    running ? [h("div", { class: "bar" }, h("i")), h("div", { class: "when", style: "margin-top:-4px" }, `${f.mode === "full" ? "Full sweep" : "Refreshing"}: ${nf.format(f.listings_done || 0)} jobs checked`)]
+      : h("div", { class: "when" }, icon("clock", "sm"), m.last_fetch ? `Refreshed ${ago(m.last_fetch)}` : "Never refreshed"),
+    h("button", { class: "btn sm block", disabled: !!running, onclick: () => startFetch(false), title: "Newest MyCareersFuture jobs, your roles, and all company career pages (~2 min)" }, icon("refresh", "sm"), running ? "Refreshing…" : "Refresh jobs"),
+    running ? null : h("button", { class: "linkbtn", style: "margin-top:8px;font-size:12px;font-weight:550;color:var(--ink-3)", onclick: () => startFetch(true), title: "Every job on MyCareersFuture (~15 min)" }, "Full sweep of all jobs"));
+  $("#mRefresh").disabled = !!running;
+  $("#mRefresh").lastChild.textContent = running ? "Refreshing…" : "Refresh";
+  if (running && !pollTimer) pollTimer = setInterval(pollFetch, 2500);
+}
+async function pollFetch() {
+  const f = await api("/api/fetch");
+  if (f.running) return renderSrcBox(f);
+  clearInterval(pollTimer); pollTimer = null;
+  await refreshMeta();
+  state.home = null;
+  if (state.view === "home") loadHome(true); else if (state.view === "search") runSearch();
+  if (f.code === 0 && !state.profile?.setup_done && state.meta.active) { showOnboarding(); return; }
+  toast(f.code === 0 ? "Feed updated with the latest jobs" : "The refresh stopped with an error", f.code === 0 ? { label: "See what's new", fn: () => go("search", { ...(state.profile?.roles?.length ? { mine: 1 } : {}), new: 1 }) } : null);
+}
+async function startFetch(full) {
+  const r = await post("/api/fetch", { full });
+  if (!r.started) return toast("A refresh is already running");
+  toast(full ? "Full sweep started (~15 min). Keep browsing" : "Refreshing (~2 min). Keep browsing");
+  const f = await api("/api/fetch");
+  state.meta.fetch = f;
+  renderSrcBox(f);
+  if (!state.meta.active && state.view === "home") renderFirstRun();
+}
+
+// ============================================================ ROUTER
+const VIEWS = ["home", "search", "pay", "tracker", "cv", "import", "settings"];
+function go(view, params) {
+  const p = new URLSearchParams(Object.entries(params || {}).filter(([, v]) => v !== "" && v != null && v !== false).map(([k, v]) => [k, String(v)]));
+  location.hash = "#" + view + (p.toString() ? "?" + p : "");
+}
+function route() {
+  const [v, qs] = location.hash.slice(1).split("?");
+  const view = VIEWS.includes(v) ? v : "home";
+  const params = new URLSearchParams(qs || "");
+  const job = +params.get("job") || null;
+  state.view = view; state.params = params;
+  for (const s of $$(".view")) s.classList.toggle("on", s.id === "view-" + view);
+  for (const a of $$("[data-nav]")) a.toggleAttribute("aria-current", a.dataset.nav === view), a.dataset.nav === view && a.setAttribute("aria-current", "page");
+  if (view === "home") loadHome();
+  else if (view === "search") runSearch();
+  else if (view === "pay") loadPay();
+  else if (view === "tracker") loadTracker();
+  else if (view === "settings") loadSettings();
+  else if (view === "import") loadImport();
+  else if (view === "cv") loadCv();
+  if (job) openJob(job); else closeDrawer();
+  if (!job) window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", route);
+
+// ============================================================ EVENTS
+let qTimer;
+$("#q").addEventListener("input", e => { clearTimeout(qTimer); qTimer = setTimeout(() => { const p = new URLSearchParams(state.params); e.target.value.trim() ? p.set("q", e.target.value.trim()) : p.delete("q"); setSearchParams(p); }, 300); });
+for (const id of SELECTS) $("#f-" + id).addEventListener("change", e => { const p = new URLSearchParams(state.params); e.target.value ? p.set(id, e.target.value) : p.delete(id); setSearchParams(p); });
+$("#clearFilters").addEventListener("click", () => setSearchParams(new URLSearchParams(state.params.get("q") ? { q: state.params.get("q") } : {})));
+$("#more").addEventListener("click", () => runSearch(true));
+$("#scrim").addEventListener("click", closeDrawer);
+$("#editProfile").addEventListener("click", () => showOnboarding());
+$("#mRefresh").addEventListener("click", () => startFetch(false));
+$("#payForm").addEventListener("submit", e => { e.preventDefault(); const r = $("#payRole").value.trim(); if (r) go("pay", { role: r }); });
+const drop = $("#drop"), file = $("#file");
+drop.addEventListener("click", () => file.click());
+drop.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); file.click(); } });
+file.addEventListener("change", () => { importFiles([...file.files]); file.value = ""; });
+drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("over"); importFiles([...e.dataTransfer.files]); });
+document.addEventListener("keydown", e => {
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+  if (e.key === "Escape" && !$("#dlg").hidden) { $("#dlg").hidden = true; return; }
+  if (e.key === "Escape") { if (!$("#onboard").hidden && state.profile?.setup_done) $("#onboard").hidden = true; else if (typing) document.activeElement.blur(); else closeDrawer(); return; }
+  if (typing || e.ctrlKey || e.metaKey || e.altKey || !$("#onboard").hidden || !$("#dlg").hidden) return;
+  if (e.key === "/") { e.preventDefault(); if (state.view !== "search") go("search"); setTimeout(() => $("#q").focus(), 30); }
+  const ids = $$(".view.on .jc").map(el => +el.dataset.id);
+  if ((e.key === "j" || e.key === "k") && ids.length) {
+    const i = ids.indexOf(state.selected), n = ids[Math.max(0, Math.min(ids.length - 1, i < 0 ? 0 : i + (e.key === "j" ? 1 : -1)))];
+    openJob(n); $(`.view.on .jc[data-id="${n}"]`)?.scrollIntoView({ block: "nearest" });
+  }
+  if (e.key === "s" && state.selected) quickSave(findJob(state.selected).id ? findJob(state.selected) : { id: state.selected });
+  if (e.key === "o" && state.selected) $("#drawer a.btn.primary")?.click();
+});
+dark.addEventListener("change", () => { drawThemeButtons(); route(); });
+$("#navTheme").addEventListener("click", () => setTheme(isDark() ? "light" : "dark"));
+$("#mTheme").addEventListener("click", () => setTheme(isDark() ? "light" : "dark"));
+for (const b of $$("#trkViews button")) b.addEventListener("click", () => { try { localStorage.setItem("cw.trackerView", b.dataset.v); } catch {} renderTracker(); });
+$("#addJob").addEventListener("click", addJobDialog);
+for (const b of $$("[data-theme-opt]")) b.addEventListener("click", () => setTheme(b.dataset.themeOpt));
+drawThemeButtons();
+
+// ============================================================ BOOT
+(async () => {
+  try { await refreshMeta(); } catch (e) { toast("Can't reach the ChiongWork server. Is it still running?"); return; }
+  if (!location.hash) history.replaceState(null, "", state.profile?.setup_done || !state.meta.active ? "#home" : "#search");
+  route();
+  if (state.meta.active && !state.profile?.setup_done && !["import", "settings"].includes(state.view)) showOnboarding();
+})();
+</script>
+</body>
+</html>

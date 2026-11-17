@@ -1,0 +1,30 @@
+From: Jobstreet <noreply@s.jobstreet.com>
+To: me@example.com
+Subject: 5 new jobs for Accountant
+Date: Mon, 16 Nov 2026 08:00:00 +0800
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============2106449924113357717=="
+
+--===============2106449924113357717==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+This email needs HTML.
+
+--===============2106449924113357717==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+
+<div><a href=3D"https://sg.jobstreet.com/job/81234567?type=3Dstandard&ref=3Da=
+lert"><b>Accounts Executive</b></a>
+<span>ABC Trading Pte Ltd</span><span>Jurong East</span><span>$3,500 =E2=80=
+=93 $4,200 per month</span></div>
+<div><a href=3D"https://sg.jobstreet.com/job/81234999?ref=3Dalert"><b>Senior =
+Accountant</b></a>
+<span>Wise</span><span>Central Region</span></div>
+<a href=3D"https://sg.jobstreet.com/job/81234567?ref=3Dalert">View</a>
+
+--===============2106449924113357717==--

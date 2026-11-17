@@ -1,0 +1,22 @@
+# Your personal data: profile, applications, CV text, home postal code, connected Gmail address
+data/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.tmp
+
+# Job cache, if someone points SGJOBS_CACHE inside the project
+*.db
+*.db-wal
+*.db-shm
+*.log
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
